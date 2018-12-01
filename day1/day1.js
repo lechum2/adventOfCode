@@ -21,7 +21,7 @@ lineReader.on("close", function () {
     currentValue = 0;
     var repeat = true;
     while(repeat) {
-        inputValues.forEach(function (element) {
+        for(let element of inputValues) {
             if(element[0] == '-') {
                 currentValue -= Number(element.substring(1));
             } else if (element[0] == '+') {
@@ -30,8 +30,9 @@ lineReader.on("close", function () {
             if(values.includes(currentValue)) {
                 console.log("first repeated value: ", currentValue);
                 repeat = false;
+                break;
             }
             values.push(currentValue);
-        });
+        }
     }
 });
