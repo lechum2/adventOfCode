@@ -29,6 +29,15 @@ function Square(top, left, right, bottom) {
 
         return true;
     };
+    this.isOverlappingWithAny = function(squares) {
+        for(let j = 0; j < squares.length; j++) {
+            if(this.index == squares[j].index) continue;
+            if(this.isOverlapping(squares[j])) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 var inputLines = fs.readFileSync('input.txt').toString().split("\n");
@@ -56,4 +65,11 @@ for(let x = 0; x < maxWidth + 1; x++) {
         }
     }
 }
-console.log(result);
+console.log("Sum of overlapping area is: ", result);
+
+for(let i = 0; i < squares.length; i++) {
+    if(!squares[i].isOverlappingWithAny(squares)) {
+        console.log("Not overlapping square is: ", squares[i].index);
+        break;
+    }
+}
