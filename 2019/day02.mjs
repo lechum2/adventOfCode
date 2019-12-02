@@ -1,5 +1,4 @@
 import {getInput} from './common/inputReader.mjs';
-import { exists } from 'fs';
 
 function compute(data) {
     let index = 0;
