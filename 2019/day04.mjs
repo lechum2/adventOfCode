@@ -1,22 +1,38 @@
 
-function isMatchingConditions(digits) {
-    let matching = false;
+function thereAreTwoRepeated(digits) {
+    let foundDouble = false;
+    let repeatedValue = undefined;
+    for(let i = 0; i < digits.length - 1; i++) {
+        if(digits[i] === digits[i + 1]) {
+            if(digits[i] === repeatedValue) {
+                foundDouble = false;
+            } else {
+                foundDouble = true;
+                repeatedValue = digits[i];
+            }
+        } else if(foundDouble) {
+            return true;
+        } else {
+            repeatedValue = undefined;
+        }
+    }
+    return foundDouble;
+}
+
+function digitsDontDecrease(digits) {
     for(let i = 0; i < digits.length - 1; i++) {
         if(digits[i] > digits[i + 1]) {
             return false;
         }
-        if(!matching && digits[i] === digits[i + 1]) {
-            matching = true;
-        }
     }
-    return matching;
+    return true;
 }
 
 function countMatchingNumbers(from, to) {
     let counter = 0;
     for(let i = from; i <= to; i++) {
         let digits = i.toString().split('').map(Number);
-        if(isMatchingConditions(digits)) {
+        if(digitsDontDecrease(digits) && thereAreTwoRepeated(digits)) {
             counter++;
         }
     }
