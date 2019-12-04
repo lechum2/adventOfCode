@@ -70,7 +70,7 @@ class Grid {
         let closest = this.size + this.size;
         for(let x = 0; x < this.size; x++) {
             for(let y = 0; y < this.size; y++) {
-                if(this.innerGrid[x][y] && this.innerGrid[x][y].unshift() === this.crossingSymbol) {
+                if(this.innerGrid[x][y] && this.innerGrid[x][y].charAt(0) === this.crossingSymbol) {
                     let distance = Math.abs(x - this.centralPortIndex) +Math.abs(y - this.centralPortIndex);
                     if(distance < closest) {
                         closest = distance;
@@ -85,7 +85,7 @@ class Grid {
         let nearest = this.size * this.size;
         for(let x = 0; x < this.size; x++) {
             for(let y = 0; y < this.size; y++) {
-                if(this.innerGrid[x][y] && this.innerGrid[x][y].unshift() === this.crossingSymbol) {
+                if(this.innerGrid[x][y] && this.innerGrid[x][y].charAt(0) === this.crossingSymbol) {
                     let distance = parseInt(this.innerGrid[x][y].substr(1));
                     if(distance <nearest ) {
                         nearest = distance;
@@ -102,4 +102,5 @@ var wires = getInput('day03.txt');
 grid.addWire(wires[0], '*');
 grid.addWire(wires[1], '.');
 console.log(grid.getClosestCrossing());
+console.log(grid.getNearestCrossing());
 
