@@ -11,15 +11,16 @@ class Grid {
         this.crossingSymbol = crossingSymbol;
     }
 
-    markPassing(x, y, symbol) {
+    markPassing(x, y, symbol, step) {
         if(x >= this.size || y >= this.size || x < 0 || y < 0) {
             return;
         }
 
         if(this.innerGrid[x][y] === undefined) {
-            this.innerGrid[x][y] = symbol;
-        } else if(this.innerGrid[x][y] !== symbol) {
-            this.innerGrid[x][y] = this.crossingSymbol;
+            this.innerGrid[x][y] = symbol + step;
+        } else if(this.innerGrid[x][y].charAt(0) !== symbol) {
+	    let otherStep = parseInt(this.innerGrid[x][y].substr(1));
+            this.innerGrid[x][y] = this.crossingSymbol + (step + otherStep);
         }
     }
 
@@ -27,6 +28,7 @@ class Grid {
         let wireArray = wire.toString().split(',');
         let positionX = this.centralPortIndex;
         let positionY = this.centralPortIndex;
+	    let step = 0;
         for (const element of wireArray) {
             const direction = element.charAt(0);
             let value = element.substr(1);
@@ -34,25 +36,29 @@ class Grid {
             switch(direction) {
                 case 'R':
                     for(let i = positionX + 1; i <= positionX + value; i++) {
-                        this.markPassing(i, positionY, symbol);
+			    step++;
+                        this.markPassing(i, positionY, symbol, step);
                     }
                     positionX += value;
                     break;
                 case 'L':
+			    step++;
                     for(let i = positionX - 1; i >= positionX - value; i--) {
-                        this.markPassing(i, positionY, symbol);
+                        this.markPassing(i, positionY, symbol, step);
                     }
                     positionX -= value;
                     break;
                 case 'U':
                     for(let i = positionY + 1; i <= positionY + value; i++) {
-                        this.markPassing(positionX, i, symbol);
+			    step++;
+                        this.markPassing(positionX, i, symbol, step);
                     }
                     positionY += value;
                     break;
                 case 'D':
                     for(let i = positionY - 1; i >= positionY - value; i--) {
-                        this.markPassing(positionX, i, symbol);
+			    step++;
+                        this.markPassing(positionX, i, symbol, step);
                     }
                     positionY -=value;
                     break;
@@ -64,7 +70,7 @@ class Grid {
         let closest = this.size + this.size;
         for(let x = 0; x < this.size; x++) {
             for(let y = 0; y < this.size; y++) {
-                if(this.innerGrid[x][y] === this.crossingSymbol) {
+                if(this.innerGrid[x][y] && this.innerGrid[x][y].unshift() === this.crossingSymbol) {
                     let distance = Math.abs(x - this.centralPortIndex) +Math.abs(y - this.centralPortIndex);
                     if(distance < closest) {
                         closest = distance;
@@ -74,6 +80,13 @@ class Grid {
         }
         return closest;
     }
+	getNearestCrossing() {
+		let nearest = this.size * this.size;
+for(let x = 0; x < this.size; x++) {                for(let y = 0; y < this.size; y++) {
+                if(this.innerGrid[x][y] && this.innerGrid[x][y].unshift() === this.crossingSymbol) {                                                                let distance = parseInt(this.innerGrid[x][y].substr(1));                                                       if(distance <nearest ) {
+                        nearest = distance;                         }                                           }                                           }                                           }
+		return nearest;
+	}
 }
 
 var grid = new Grid(10000, 5000, '#');
