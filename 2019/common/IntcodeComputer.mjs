@@ -19,13 +19,14 @@ export class IntcodeComputer {
                     result = arg1 * arg2;
                     break;
                 case 3:
-                    this.put(input, this.get(index +1));
+                    this.put(input, this.get(index + 1));
                     break;
                 case 4:
                     output = this.get(index + 1);
                 case 99:
                     return;
-                default: console.error('Unknown operator!');
+                default:
+                    console.error("Unknown operator!");
                     return;
             }
             this.data[this.data[index + 3]] = result;
