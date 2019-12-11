@@ -1,4 +1,10 @@
-export function compute(data) {
+export class IntcodeComputer {
+    constructor(data) {
+        this.data = data;
+    }
+
+function compute(input = 0) {
+    let output = 0;
     let index = 0;
     while (index < data.length) {
         let operator = data[index];
@@ -12,6 +18,11 @@ export function compute(data) {
             case 2:
                 result = arg1 * arg2;
                 break;
+            case 3:
+                this.put(input, this.get(index +1));
+                break;
+            case 4:
+                output = this.get(index + 1);
             case 99:
                 return;
             default: console.error('Unknown operator!');
@@ -19,5 +30,14 @@ export function compute(data) {
         }
         data[data[index + 3]] = result;
         index += 4;
+    }
+    return output;
+}
+    put(value, index) {
+        this.data[index] = value;
+    }
+
+    get(index) {
+        return this.data[index];
     }
 }
