@@ -10,5 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "prettier": "1.19.1"
+  },
+  "dependencies": {
+    "jasmine": "^3.5.0"
   }
 }
