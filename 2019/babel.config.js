@@ -9,13 +9,5 @@ module.exports = {
                 }
             }
         ]
-    ],
-    plugins: [
-        [
-            "module-extension",
-            {
-                mjs: "js"
-            }
-        ]
     ]
 };

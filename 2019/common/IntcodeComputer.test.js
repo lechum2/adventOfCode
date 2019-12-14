@@ -1,4 +1,4 @@
-import { Intcode } from "./IntcodeComputer.mjs";
+import { Intcode } from "./IntcodeComputer.js";
 
 test("should return input as output", () => {
     let intcode = new Intcode([3, 0, 4, 0, 99]);

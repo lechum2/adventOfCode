@@ -1,4 +1,4 @@
-import { getInput } from "./common/inputReader.mjs";
+import { getInput } from "./common/inputReader.js";
 
 let data = getInput("day01.txt");
 data.unshift(0);

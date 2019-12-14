@@ -1,5 +1,5 @@
-import { getInput } from "./common/inputReader.mjs";
-import { IntcodeComputer } from "./common/IntcodeComputer.mjs";
+import { getInput } from "./common/inputReader.js";
+import { IntcodeComputer } from "./common/IntcodeComputer.js";
 
 function findInputsForValue(data, value) {
     for (let i = 0; i < 100; i++) {

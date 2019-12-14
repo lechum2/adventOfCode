@@ -1,4 +1,4 @@
-import { getInput } from "./common/inputReader.mjs";
+import { getInput } from "./common/inputReader.js";
 
 class Grid {
     constructor(size, centralPortIndex, crossingSymbol) {
