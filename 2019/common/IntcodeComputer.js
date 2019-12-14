@@ -8,19 +8,20 @@ export class IntcodeComputer {
         let index = 0;
         let step = 0;
         while (index < this.data.length) {
-            let operator = this.data[index];
-            let arg1 = this.data[this.data[index + 1]];
-            let arg2 = this.data[this.data[index + 2]];
-            let result;
+            let operator = this.get(index);
+            let arg1 = 0;
+            let arg2 = 0;
             switch (operator) {
                 case 1:
-                    result = arg1 + arg2;
-                    this.data[this.data[index + 3]] = result;
+                    arg1 = this.get(this.get(index + 1));
+                    arg2 = this.get(this.get(index + 2));
+                    this.put(arg1 + arg2, this.get(index + 3));
                     step = 4;
                     break;
                 case 2:
-                    result = arg1 * arg2;
-                    this.data[this.data[index + 3]] = result;
+                    arg1 = this.get(this.get(index + 1));
+                    arg2 = this.get(this.get(index + 2));
+                    this.put(arg1 * arg2, this.get(index + 3));
                     step = 4;
                     break;
                 case 3:
