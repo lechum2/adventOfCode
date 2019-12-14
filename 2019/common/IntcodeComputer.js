@@ -6,6 +6,7 @@ export class IntcodeComputer {
     compute(input = 0) {
         let output = 0;
         let index = 0;
+        let step = 0;
         while (index < this.data.length) {
             let operator = this.data[index];
             let arg1 = this.data[this.data[index + 1]];
@@ -14,25 +15,30 @@ export class IntcodeComputer {
             switch (operator) {
                 case 1:
                     result = arg1 + arg2;
+                    this.data[this.data[index + 3]] = result;
+                    step = 4;
                     break;
                 case 2:
                     result = arg1 * arg2;
+                    this.data[this.data[index + 3]] = result;
+                    step = 4;
                     break;
                 case 3:
                     this.put(input, this.get(index + 1));
+                    step = 2;
                     break;
                 case 4:
-                    output = this.get(index + 1);
+                    output = this.get(this.get(index + 1));
+                    step = 2;
+                    break;
                 case 99:
-                    return;
+                    return output;
                 default:
                     console.error("Unknown operator!");
                     return;
             }
-            this.data[this.data[index + 3]] = result;
-            index += 4;
+            index += step;
         }
-        return output;
     }
 
     put(value, index) {
