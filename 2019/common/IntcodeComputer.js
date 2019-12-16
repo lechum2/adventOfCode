@@ -49,4 +49,13 @@ export class IntcodeComputer {
     get(index) {
         return this.data[index];
     }
+
+    getInstruction(value) {
+        let instruction = [];
+        instruction[0] = value % 100;
+        instruction[1] = Math.trunc(value / 100) % 10;
+        instruction[2] = Math.trunc(value / 1000) % 10;
+        instruction[3] = Math.trunv(value / 10000) % 10;
+        return instructions;
+    }
 }
