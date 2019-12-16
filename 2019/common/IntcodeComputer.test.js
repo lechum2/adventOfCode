@@ -12,3 +12,10 @@ test("should properly add and multiply", () => {
     let result = intcode.get(0);
     expect(result).toBe(3500);
 });
+
+test("should handle imidiete mode", () => {
+    let intcode = new IntcodeComputer([1002,4,3,4,33]);
+    intcode.compute();
+    let result = intcode.get(4);
+    expect(result).toBe(99);
+});
