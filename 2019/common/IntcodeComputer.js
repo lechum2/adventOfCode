@@ -59,17 +59,13 @@ export class IntcodeComputer {
     }
 
     performOperation(baseIndex, instruction, operation) {
-        let arg1 = instruction[1]
-            ? this.getPointed(baseIndex + 1)
-            : this.get(baseIndex + 1);
-        let arg2 = instruction[2]
-            ? this.getPointed(baseIndex + 2)
-            : this.get(baseIndex + 2);
+        let arg1 = instruction[1] ? this.get(baseIndex + 1) : this.getPointed(baseIndex + 1);
+        let arg2 = instruction[2] ? this.get(baseIndex + 2) : this.getPointed(baseIndex + 2);
         let result = operation(arg1, arg2);
         if (instruction[3]) {
-            this.put(result, this.get(baseIndex + 3));
-        } else {
             this.put(result, baseIndex + 3);
+        } else {
+            this.put(result, this.get(baseIndex + 3));
         }
     }
 }
