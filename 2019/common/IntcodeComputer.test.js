@@ -7,14 +7,14 @@ test("should return input as output", () => {
 });
 
 test("should properly add and multiply", () => {
-    let intcode = new IntcodeComputer([1,9,10,3,2,3,11,0,99,30,40,50]);
+    let intcode = new IntcodeComputer([1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50]);
     intcode.compute();
     let result = intcode.get(0);
     expect(result).toBe(3500);
 });
 
-test("should handle imidiete mode", () => {
-    let intcode = new IntcodeComputer([1002,4,3,4,33]);
+test("should handle paramter mode", () => {
+    let intcode = new IntcodeComputer([1002, 4, 3, 4, 33]);
     intcode.compute();
     let result = intcode.get(4);
     expect(result).toBe(99);
