@@ -41,12 +41,12 @@ export class IntcodeComputer {
                     }
                     break;
                 case 7:
-                    let result = this.getParameter(instruction[1], index + 1) < this.getParameter(instruction[2], index + 2) ? 1 : 0;
-                    this.setParameter(instruction[3], index + 3, result);
+                    let lessThan = this.getParameter(instruction[1], index + 1) < this.getParameter(instruction[2], index + 2) ? 1 : 0;
+                    this.setResult(instruction[3], index + 3, lessThan);
                     index += 4;
                     break;
                 case 8:
-                    let result = this.getParameter(instruction[1], index + 1) = this.getParameter(instruction[2], index + 2) ? 1 : 0;                               this.setParameter(instruction[3], index + 3, result);                                           index += 4;
+                    let equals = this.getParameter(instruction[1], index + 1) === this.getParameter(instruction[2], index + 2) ? 1 : 0;                               this.setResult(instruction[3], index + 3, equals);                                           index += 4;
                     break;
                 case 99:
                     return output;
