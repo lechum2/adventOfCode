@@ -27,6 +27,26 @@ export class IntcodeComputer {
                     index += 2;
                     break;
                 case 5:
+                    if(this.getParameter(instruction[1], index + 1)) {
+                        index = this.getParameter(instruction[2], index + 2);
+                    } else {
+                        index += 3;
+                    }
+                    break;
+                case 6:
+                    if(!this.getParameter(instruction[1], index + 1)) {
+                        index = this.getParameter(instruction[2], index + 2);
+                    } else {
+                        index += 3;
+                    }
+                    break;
+                case 7:
+                    let result = this.getParameter(instruction[1], index + 1) < this.getParameter(instruction[2], index + 2) ? 1 : 0;
+                    this.setParameter(instruction[3], index + 3, result);
+                    index += 4;
+                    break;
+                case 8:
+                    let result = this.getParameter(instruction[1], index + 1) = this.getParameter(instruction[2], index + 2) ? 1 : 0;                               this.setParameter(instruction[3], index + 3, result);                                           index += 4;
                     break;
                 case 99:
                     return output;
