@@ -6,26 +6,27 @@ export class IntcodeComputer {
     compute(input = 0) {
         let output = 0;
         let index = 0;
-        let step = 0;
         while (index < this.data.length) {
             let instruction = this.getInstruction(this.get(index));
             let opcode = instruction[0];
             switch (opcode) {
                 case 1:
                     this.performOperation(index, instruction, (a, b) => a + b);
-                    step = 4;
+                    index += 4;
                     break;
                 case 2:
                     this.performOperation(index, instruction, (a, b) => a * b);
-                    step = 4;
+                    index += 4;
                     break;
                 case 3:
                     this.put(input, this.get(index + 1));
-                    step = 2;
+                    index += 2;
                     break;
                 case 4:
                     output = this.get(this.get(index + 1));
-                    step = 2;
+                    index += 2;
+                    break;
+                case 5:
                     break;
                 case 99:
                     return output;
@@ -33,7 +34,6 @@ export class IntcodeComputer {
                     console.error("Unknown operator!");
                     return;
             }
-            index += step;
         }
     }
 
@@ -58,14 +58,22 @@ export class IntcodeComputer {
         return instruction;
     }
 
-    performOperation(baseIndex, instruction, operation) {
-        let arg1 = instruction[1] ? this.get(baseIndex + 1) : this.getPointed(baseIndex + 1);
-        let arg2 = instruction[2] ? this.get(baseIndex + 2) : this.getPointed(baseIndex + 2);
-        let result = operation(arg1, arg2);
-        if (instruction[3]) {
-            this.put(result, baseIndex + 3);
+    getParameter(mode, index) {
+        return mode ? this.get(index) : this.getPointed(index);
+    }
+
+    setResult(mode, index, value) {
+        if(mode) {
+            this.put(value, index);
         } else {
-            this.put(result, this.get(baseIndex + 3));
+            this.put(value, this.get(index));
         }
+    }
+
+    performOperation(baseIndex, instruction, operation) {
+        let arg1 = this.getParameter(instruction[1], baseIndex + 1);
+        let arg2 = this.getParameter(instruction[2], baseIndex + 2);
+        let result = operation(arg1, arg2);
+        this.setResult(instruction[3], baseIndex + 3, result); 
     }
 }
