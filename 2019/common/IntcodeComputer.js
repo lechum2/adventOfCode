@@ -20,11 +20,11 @@ export class IntcodeComputer {
                     index += 4;
                     break;
                 case 3:
-                    this.put(input, this.get(index + 1));
+                    this.setResult(instruction[1], index + 1, input);
                     index += 2;
                     break;
                 case 4:
-                    output = this.getPointed(index + 1);
+                    output = this.getParameter(instruction[1], index + 1);
                     index += 2;
                     break;
                 case 5:

@@ -63,11 +63,10 @@ test("should check if input is 0 - immediate mode", () => {
 });
 
 test("should compare to 8", () => {
-    let intcode = new IntcodeComputer([
-        3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+    let intcode = new IntcodeComputer([3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
         1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
         999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99]);
-    expect(intcode.compute(7)).toBe(999);
+    expect(intcode.compute(1)).toBe(999);
     intcode.reset();
     expect(intcode.compute(8)).toBe(1000);
     intcode.reset();
