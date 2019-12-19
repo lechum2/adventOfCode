@@ -27,26 +27,36 @@ export class IntcodeComputer {
                     index += 2;
                     break;
                 case 5:
-                    if(this.getParameter(instruction[1], index + 1)) {
+                    if (this.getParameter(instruction[1], index + 1)) {
                         index = this.getParameter(instruction[2], index + 2);
                     } else {
                         index += 3;
                     }
                     break;
                 case 6:
-                    if(!this.getParameter(instruction[1], index + 1)) {
+                    if (!this.getParameter(instruction[1], index + 1)) {
                         index = this.getParameter(instruction[2], index + 2);
                     } else {
                         index += 3;
                     }
                     break;
                 case 7:
-                    let lessThan = this.getParameter(instruction[1], index + 1) < this.getParameter(instruction[2], index + 2) ? 1 : 0;
+                    let lessThan =
+                        this.getParameter(instruction[1], index + 1) <
+                        this.getParameter(instruction[2], index + 2)
+                            ? 1
+                            : 0;
                     this.setResult(instruction[3], index + 3, lessThan);
                     index += 4;
                     break;
                 case 8:
-                    let equals = this.getParameter(instruction[1], index + 1) === this.getParameter(instruction[2], index + 2) ? 1 : 0;                               this.setResult(instruction[3], index + 3, equals);                                           index += 4;
+                    let equals =
+                        this.getParameter(instruction[1], index + 1) ===
+                        this.getParameter(instruction[2], index + 2)
+                            ? 1
+                            : 0;
+                    this.setResult(instruction[3], index + 3, equals);
+                    index += 4;
                     break;
                 case 99:
                     return output;
@@ -83,7 +93,7 @@ export class IntcodeComputer {
     }
 
     setResult(mode, index, value) {
-        if(mode) {
+        if (mode) {
             this.put(value, index);
         } else {
             this.put(value, this.get(index));
@@ -94,6 +104,6 @@ export class IntcodeComputer {
         let arg1 = this.getParameter(instruction[1], baseIndex + 1);
         let arg2 = this.getParameter(instruction[2], baseIndex + 2);
         let result = operation(arg1, arg2);
-        this.setResult(instruction[3], baseIndex + 3, result); 
+        this.setResult(instruction[3], baseIndex + 3, result);
     }
 }

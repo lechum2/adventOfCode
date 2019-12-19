@@ -21,7 +21,7 @@ test("should handle paramter mode", () => {
 });
 
 test("should check if input is 8", () => {
-    let intcode = new IntcodeComputer([3,9,8,9,10,9,4,9,99,-1,8]);
+    let intcode = new IntcodeComputer([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8]);
     expect(intcode.compute(8)).toBe(1);
     expect(intcode.compute(9)).toBe(0);
 });
