@@ -1,5 +1,6 @@
 export class IntcodeComputer {
     constructor(data) {
+        this.originalData = [...data];
         this.data = data;
     }
 
@@ -23,7 +24,7 @@ export class IntcodeComputer {
                     index += 2;
                     break;
                 case 4:
-                    output = this.get(this.get(index + 1));
+                    output = this.getPointed(index + 1);
                     index += 2;
                     break;
                 case 5:
@@ -65,6 +66,10 @@ export class IntcodeComputer {
                     return;
             }
         }
+    }
+
+    reset() {
+        this.data = [...this.originalData];
     }
 
     put(value, index) {
