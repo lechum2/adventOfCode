@@ -75,8 +75,7 @@ class Grid {
                     this.innerGrid[x][y].charAt(0) === this.crossingSymbol
                 ) {
                     let distance =
-                        Math.abs(x - this.centralPortIndex) +
-                        Math.abs(y - this.centralPortIndex);
+                        Math.abs(x - this.centralPortIndex) + Math.abs(y - this.centralPortIndex);
                     if (distance < closest) {
                         closest = distance;
                     }

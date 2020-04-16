@@ -30,10 +30,7 @@ function digitsDontDecrease(digits) {
 function countMatchingNumbers(from, to) {
     let counter = 0;
     for (let i = from; i <= to; i++) {
-        let digits = i
-            .toString()
-            .split("")
-            .map(Number);
+        let digits = i.toString().split("").map(Number);
         if (digitsDontDecrease(digits) && thereAreTwoRepeated(digits)) {
             counter++;
         }
