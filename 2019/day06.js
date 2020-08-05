@@ -42,5 +42,5 @@ input.forEach(inputLine => {
 
 let result = [...planets.values()].reduce((accumulator, current) => accumulator + current.getWeight(), 0);
 
+// console.log(planets);
 console.log(result);
-console.log(planets);
