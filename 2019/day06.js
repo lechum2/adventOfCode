@@ -8,7 +8,7 @@ class Planet {
     }
 
     getWeight() {
-        if(this.weight === null) {
+        if (this.weight === null) {
             if (this.parent) {
                 this.weight = this.parent.getWeight() + 1;
             } else {
@@ -21,8 +21,8 @@ class Planet {
 
 let input = getInput("day06.txt");
 let planets = new Map();
-input.forEach(inputLine => {
-    let inputPlanets = inputLine.split(')');
+input.forEach((inputLine) => {
+    let inputPlanets = inputLine.split(")");
     let parentPlanet;
     let satellitePlanet;
     if (planets.has(inputPlanets[0])) {
@@ -40,7 +40,10 @@ input.forEach(inputLine => {
     }
 });
 
-let result = [...planets.values()].reduce((accumulator, current) => accumulator + current.getWeight(), 0);
+let result = [...planets.values()].reduce(
+    (accumulator, current) => accumulator + current.getWeight(),
+    0
+);
 
 // console.log(planets);
 console.log(result);
