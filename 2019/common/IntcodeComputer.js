@@ -4,9 +4,10 @@ export class IntcodeComputer {
         this.data = data;
     }
 
-    compute(input = 0) {
+    compute(...input) {
         let output = 0;
         let index = 0;
+        let inputIndex = 0;
         while (index < this.data.length) {
             let instruction = this.getInstruction(this.get(index));
             let opcode = instruction[0];
@@ -20,7 +21,8 @@ export class IntcodeComputer {
                     index += 4;
                     break;
                 case 3:
-                    this.setResult(instruction[1], index + 1, input);
+                    let inputValue = this.getInputValue(input, inputIndex);
+                    this.setResult(instruction[1], index + 1, inputValue);
                     index += 2;
                     break;
                 case 4:
@@ -110,5 +112,12 @@ export class IntcodeComputer {
         let arg2 = this.getParameter(instruction[2], baseIndex + 2);
         let result = operation(arg1, arg2);
         this.setResult(instruction[3], baseIndex + 3, result);
+    }
+
+    getInputValue(input, index) {
+        if (input.length <= index) {
+            return 0;
+        }
+        return input[index];
     }
 }
