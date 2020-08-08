@@ -121,5 +121,5 @@ test("should compare to 8", () => {
 
 test("should take 3 arguments and sum them", () =>{
     let intcode = new IntcodeComputer([3, 0, 3, 1, 3, 2, 1, 0, 1, 0, 1, 2, 0, 0, 4, 0, 99]);
-    expect(intcode.compute(2,2,2)).toBe(6);
+    expect(intcode.compute(1,2,3)).toBe(6);
 });

@@ -22,6 +22,7 @@ export class IntcodeComputer {
                     break;
                 case 3:
                     let inputValue = this.getInputValue(input, inputIndex);
+			inputIndex++;
                     this.setResult(instruction[1], index + 1, inputValue);
                     index += 2;
                     break;
@@ -117,7 +118,7 @@ export class IntcodeComputer {
     getInputValue(input, index) {
         if (input.length <= index) {
             return 0;
-        }
+	}
         return input[index];
     }
 }
