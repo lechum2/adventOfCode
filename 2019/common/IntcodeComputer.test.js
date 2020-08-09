@@ -119,7 +119,22 @@ test("should compare to 8", () => {
     expect(intcode.compute(11)).toBe(1001);
 });
 
-test("should take 3 arguments and sum them", () =>{
+test("should take 3 arguments and sum them", () => {
     let intcode = new IntcodeComputer([3, 0, 3, 1, 3, 2, 1, 0, 1, 0, 1, 2, 0, 0, 4, 0, 99]);
-    expect(intcode.compute(1,2,3)).toBe(6);
+    expect(intcode.compute(1, 2, 3)).toBe(6);
+});
+
+test("should pause when not sufficient input", () => {
+    let intcode = new IntcodeComputer([3, 0, 3, 1, 3, 2, 1, 0, 1, 0, 1, 2, 0, 0, 4, 0, 99]);
+    expect(intcode.compute(1, 2)).toBe(undefined);
+    intcode.addInput(3);
+    expect(intcode.resumeOperation()).toBe(6);
+});
+
+test("should pause after output", () => {
+    let intcode = new IntcodeComputer([3, 0, 3, 1, 3, 2, 1, 0, 1, 0, 1, 2, 0, 0, 4, 0, 99]);
+    intcode.compute(1, 2, 3);
+    expect(intcode.hasFinishedOperation()).toBe(false);
+    intcode.resumeOperation();
+    expect(intcode.hasFinishedOperation()).toBe(true);
 });

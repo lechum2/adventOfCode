@@ -1,81 +1,93 @@
 export class IntcodeComputer {
     StatusEnum = Object.freeze({
         NEW: 0,
-        REFRESHED: 1,
-        FINISHED: 2,
-        INPUT_PAUSE: 3,
-        OUTPUT_PAUSE: 4,
+        FINISHED: 1,
+        OPERATION: 2,
+        REFRESHED: 3,
+        INPUT_PAUSE: 4,
+        OUTPUT_PAUSE: 5,
     });
 
     constructor(data) {
         this.originalData = [...data];
-        this.data = data;
+        this.reset();
         this.status = this.StatusEnum.NEW;
     }
 
+    reset() {
+        this.data = [...this.originalData];
+        this.status = this.StatusEnum.REFRESHED;
+        this.output = undefined;
+        this.index = 0;
+        this.inputIndex = 0;
+        this.input = [];
+    }
+
     compute(...input) {
-        let output = 0;
-        let index = 0;
-        let inputIndex = 0;
-        while (index < this.data.length) {
-            let instruction = this.getInstruction(this.get(index));
+        this.input = input;
+        return this.runMainLoop();
+    }
+
+    runMainLoop() {
+        while (this.index < this.data.length) {
+            let instruction = this.getInstruction(this.get(this.index));
             let opcode = instruction[0];
             switch (opcode) {
                 case 1:
-                    this.performOperation(index, instruction, (a, b) => a + b);
-                    index += 4;
+                    this.performOperation(this.index, instruction, (a, b) => a + b);
+                    this.index += 4;
                     break;
                 case 2:
-                    this.performOperation(index, instruction, (a, b) => a * b);
-                    index += 4;
+                    this.performOperation(this.index, instruction, (a, b) => a * b);
+                    this.index += 4;
                     break;
                 case 3:
-                    let inputValue = this.getInputValue(input, inputIndex);
+                    let inputValue = this.getNextInputValue();
                     if (inputValue === null) {
                         this.status = this.StatusEnum.INPUT_PAUSE;
                         return;
                     }
-                    inputIndex++;
-                    this.setResult(instruction[1], index + 1, inputValue);
-                    index += 2;
+                    this.inputIndex++;
+                    this.setResult(instruction[1], this.index + 1, inputValue);
+                    this.index += 2;
                     break;
                 case 4:
-                    output = this.getParameter(instruction[1], index + 1);
-                    index += 2;
+                    this.output = this.getParameter(instruction[1], this.index + 1);
+                    this.index += 2;
                     this.status = this.StatusEnum.OUTPUT_PAUSE;
-                    return output;
+                    return this.output;
                     break;
                 case 5:
-                    if (this.getParameter(instruction[1], index + 1)) {
-                        index = this.getParameter(instruction[2], index + 2);
+                    if (this.getParameter(instruction[1], this.index + 1)) {
+                        this.index = this.getParameter(instruction[2], this.index + 2);
                     } else {
-                        index += 3;
+                        this.index += 3;
                     }
                     break;
                 case 6:
-                    if (!this.getParameter(instruction[1], index + 1)) {
-                        index = this.getParameter(instruction[2], index + 2);
+                    if (!this.getParameter(instruction[1], this.index + 1)) {
+                        this.index = this.getParameter(instruction[2], this.index + 2);
                     } else {
-                        index += 3;
+                        this.index += 3;
                     }
                     break;
                 case 7:
                     let lessThan =
-                        this.getParameter(instruction[1], index + 1) <
-                        this.getParameter(instruction[2], index + 2)
+                        this.getParameter(instruction[1], this.index + 1) <
+                        this.getParameter(instruction[2], this.index + 2)
                             ? 1
                             : 0;
-                    this.setResult(instruction[3], index + 3, lessThan);
-                    index += 4;
+                    this.setResult(instruction[3], this.index + 3, lessThan);
+                    this.index += 4;
                     break;
                 case 8:
                     let equals =
-                        this.getParameter(instruction[1], index + 1) ===
-                        this.getParameter(instruction[2], index + 2)
+                        this.getParameter(instruction[1], this.index + 1) ===
+                        this.getParameter(instruction[2], this.index + 2)
                             ? 1
                             : 0;
-                    this.setResult(instruction[3], index + 3, equals);
-                    index += 4;
+                    this.setResult(instruction[3], this.index + 3, equals);
+                    this.index += 4;
                     break;
                 case 99:
                     this.status = this.StatusEnum.FINISHED;
@@ -85,10 +97,6 @@ export class IntcodeComputer {
                     return;
             }
         }
-    }
-
-    reset() {
-        this.data = [...this.originalData];
     }
 
     put(value, index) {
@@ -131,10 +139,22 @@ export class IntcodeComputer {
         this.setResult(instruction[3], baseIndex + 3, result);
     }
 
-    getInputValue(input, index) {
-        if (input.length <= index) {
+    getNextInputValue() {
+        if (this.input.length <= this.inputIndex) {
             return null;
         }
-        return input[index];
+        return this.input[this.inputIndex];
+    }
+
+    hasFinishedOperation() {
+        return this.status === this.StatusEnum.FINISHED;
+    }
+
+    addInput(inputValue) {
+        this.input.push(inputValue);
+    }
+
+    resumeOperation() {
+        return this.runMainLoop();
     }
 }
