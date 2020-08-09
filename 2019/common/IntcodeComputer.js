@@ -1,7 +1,16 @@
 export class IntcodeComputer {
+    StatusEnum = Object.freeze({
+        NEW: 0,
+        REFRESHED: 1,
+        FINISHED: 2,
+        INPUT_PAUSE: 3,
+        OUTPUT_PAUSE: 4,
+    });
+
     constructor(data) {
         this.originalData = [...data];
         this.data = data;
+        this.status = this.StatusEnum.NEW;
     }
 
     compute(...input) {
@@ -22,13 +31,19 @@ export class IntcodeComputer {
                     break;
                 case 3:
                     let inputValue = this.getInputValue(input, inputIndex);
-			inputIndex++;
+                    if (inputValue === null) {
+                        this.status = this.StatusEnum.INPUT_PAUSE;
+                        return;
+                    }
+                    inputIndex++;
                     this.setResult(instruction[1], index + 1, inputValue);
                     index += 2;
                     break;
                 case 4:
                     output = this.getParameter(instruction[1], index + 1);
                     index += 2;
+                    this.status = this.StatusEnum.OUTPUT_PAUSE;
+                    return output;
                     break;
                 case 5:
                     if (this.getParameter(instruction[1], index + 1)) {
@@ -63,7 +78,8 @@ export class IntcodeComputer {
                     index += 4;
                     break;
                 case 99:
-                    return output;
+                    this.status = this.StatusEnum.FINISHED;
+                    return;
                 default:
                     console.error("Unknown operator!");
                     return;
@@ -117,8 +133,8 @@ export class IntcodeComputer {
 
     getInputValue(input, index) {
         if (input.length <= index) {
-            return 0;
-	}
+            return null;
+        }
         return input[index];
     }
 }
