@@ -21,3 +21,37 @@ for (const sequence of sequences) {
 }
 
 console.log(maxSignal);
+
+function calculateLoopedSignal(sequence, amplifiers) {
+    for (let i = 0; i < 5; i++) {
+        amplifiers[i].reset();
+        amplifiers[i].compute();
+        amplifiers[i].addInput(sequence[i]);
+    }
+
+    let amplifierIndex = 0;
+    let signal = 0;
+    while (!amplifiers[4].hasFinishedOperation()) {
+        signal = amplifiers[amplifierIndex].addInput(signal);
+        signal = amplifiers[amplifierIndex].resumeOperation();
+        amplifiers[amplifierIndex].resumeOperation();
+        amplifierIndex = (amplifierIndex + 1) % 5;
+    }
+    return signal;
+}
+
+let amplifiers = [];
+for (let i = 0; i < 5; i++) {
+    amplifiers.push(new IntcodeComputer(input));
+}
+
+const loopedSequences = permutator([5, 6, 7, 8, 9]);
+let maxLoopedSignal = 0;
+for (const loopedSequence of loopedSequences) {
+    let loopedSequenceSignal = calculateLoopedSignal(loopedSequence, amplifiers);
+    if (loopedSequenceSignal > maxLoopedSignal) {
+        maxLoopedSignal = loopedSequenceSignal;
+    }
+}
+
+console.log(maxLoopedSignal);
