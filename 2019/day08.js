@@ -9,10 +9,10 @@ let digitsIndex = 0;
 let image = [];
 while (digitsIndex < digits.length) {
     image[layerIndex] = [];
-    for (let x = 0; x < width; x++) {
-        image[layerIndex][x] = [];
-        for (let y = 0; y < height; y++) {
-            image[layerIndex][x][y] = digits[digitsIndex];
+    for (let y = 0; y < height; y++) {
+        image[layerIndex][y] = [];
+        for (let x = 0; x < width; x++) {
+            image[layerIndex][y][x] = digits[digitsIndex];
             digitsIndex++;
         }
     }
@@ -36,7 +36,7 @@ let onesNum = 0;
 let twosNum = 0;
 for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
-        let value = image[minZeroesLayerIndex][x][y];
+        let value = image[minZeroesLayerIndex][y][x];
         if (value == 1) {
             onesNum++;
         } else if (value == 2) {
@@ -45,3 +45,25 @@ for (let x = 0; x < width; x++) {
     }
 }
 console.log(onesNum * twosNum);
+
+let finalImage = image[0];
+
+for (const layer of image) {
+    for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+            if (finalImage[y][x] === 2) {
+                finalImage[y][x] = layer[y][x];
+            }
+        }
+    }
+}
+for (let y = 0; y < height; y++) {
+    process.stdout.write("\n");
+    for (let x = 0; x < width; x++) {
+        if (finalImage[y][x] === 0) {
+            process.stdout.write("█");
+        } else if (finalImage[y][x] == 1) {
+            process.stdout.write("░");
+        }
+    }
+}
