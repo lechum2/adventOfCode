@@ -111,7 +111,7 @@ export class IntcodeComputer {
     }
 
     get(index) {
-        return this.data[index];
+        return this.data[index] === undefined ? 0 : this.data[index];
     }
 
     getPointed(pointerIndex) {

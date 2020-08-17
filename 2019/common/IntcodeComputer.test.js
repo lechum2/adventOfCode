@@ -146,6 +146,7 @@ test("takes no input and produces a copy of itself as output", () => {
     while (!intcode.hasFinishedOperation()) {
         output.push(intcode.resumeOperation());
     }
+    output.pop();
     expect(output).toStrictEqual(input);
 });
 
