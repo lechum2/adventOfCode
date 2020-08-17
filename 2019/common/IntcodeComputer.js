@@ -144,7 +144,7 @@ export class IntcodeComputer {
                 this.put(value, index);
                 break;
             case 2: //relative mode
-                this.put(value, this.relativeBase + index);
+                this.put(value, this.relativeBase + this.get(index));
                 break;
             default: //position mode
                 this.put(value, this.get(index));
