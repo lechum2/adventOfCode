@@ -152,7 +152,7 @@ test("takes no input and produces a copy of itself as output", () => {
 test("should output a 16-digit number", () => {
     let intcode = new IntcodeComputer([1102, 34915192, 34915192, 7, 4, 7, 99, 0]);
     let output = intcode.compute();
-    expect(output.count).toStrictEqual(16);
+    expect(output.toString().length).toStrictEqual(16);
 });
 
 test("should output the large number in the middle", () => {

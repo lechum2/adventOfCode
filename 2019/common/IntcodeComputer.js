@@ -91,6 +91,10 @@ export class IntcodeComputer {
                     this.setResult(instruction[3], this.index + 3, equals);
                     this.index += 4;
                     break;
+                case 9:
+                    this.relativeBase += this.getParameter(instruction[1], this.index + 1);
+                    this.index += 2;
+                    break;
                 case 99:
                     this.status = this.StatusEnum.FINISHED;
                     return;
@@ -111,7 +115,7 @@ export class IntcodeComputer {
     }
 
     getPointed(pointerIndex) {
-        return this.data[this.data[pointerIndex]];
+        return this.get(this.get(pointerIndex));
     }
 
     getInstruction(value) {
@@ -124,14 +128,27 @@ export class IntcodeComputer {
     }
 
     getParameter(mode, index) {
-        return mode ? this.get(index) : this.getPointed(index);
+        switch (mode) {
+            case 1: //immediate mode
+                return this.get(index);
+            case 2: //relative mode
+                return this.get(this.relativeBase + this.get(index));
+            default: //position mode
+                return this.getPointed(index);
+        }
     }
 
     setResult(mode, index, value) {
-        if (mode) {
-            this.put(value, index);
-        } else {
-            this.put(value, this.get(index));
+        switch (mode) {
+            case 1: //immediate mode
+                this.put(value, index);
+                break;
+            case 2: //relative mode
+                this.put(value, this.relativeBase + index);
+                break;
+            default: //position mode
+                this.put(value, this.get(index));
+                break;
         }
     }
 
