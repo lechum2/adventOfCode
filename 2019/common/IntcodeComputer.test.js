@@ -138,3 +138,24 @@ test("should pause after output", () => {
     intcode.resumeOperation();
     expect(intcode.hasFinishedOperation()).toBe(true);
 });
+
+test("takes no input and produces a copy of itself as output", () => {
+    let input = [109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99];
+    let intcode = new IntcodeComputer(input);
+    let output = [];
+    while (!intcode.hasFinishedOperation()) {
+        output.push(intcode.resumeOperation());
+    }
+    expect(output).toStrictEqual(input);
+});
+
+test("should output a 16-digit number", () => {
+    let intcode = new IntcodeComputer([1102, 34915192, 34915192, 7, 4, 7, 99, 0]);
+    let output = intcode.compute();
+    expect(output.count).toStrictEqual(16);
+});
+
+test("should output the large number in the middle", () => {
+    let intcode = new IntcodeComputer([104, 1125899906842624, 99]);
+    expect(intcode.compute()).toStrictEqual(1125899906842624);
+});

@@ -6,6 +6,7 @@ export class IntcodeComputer {
         REFRESHED: 3,
         INPUT_PAUSE: 4,
         OUTPUT_PAUSE: 5,
+        ERROR: 6,
     });
 
     constructor(data) {
@@ -21,6 +22,7 @@ export class IntcodeComputer {
         this.index = 0;
         this.inputIndex = 0;
         this.input = [];
+        this.relativeBase = 0;
     }
 
     compute(...input) {
@@ -93,6 +95,7 @@ export class IntcodeComputer {
                     this.status = this.StatusEnum.FINISHED;
                     return;
                 default:
+                    this.status = this.StatusEnum.ERROR;
                     console.error("Unknown operator!");
                     return;
             }
@@ -147,7 +150,7 @@ export class IntcodeComputer {
     }
 
     hasFinishedOperation() {
-        return this.status === this.StatusEnum.FINISHED;
+        return this.status === this.StatusEnum.FINISHED || this.status === this.StatusEnum.ERROR;
     }
 
     addInput(inputValue) {
