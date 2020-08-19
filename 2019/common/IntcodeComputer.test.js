@@ -14,7 +14,7 @@ test("should properly add and multiply", () => {
 });
 
 test("should handle paramter mode", () => {
-    let intcode = new IntcodeComputer([1002, 4, 3, 4, 33]);
+    let intcode = new IntcodeComputer([1002, 4, 3, 4, 33, 99]);
     intcode.compute();
     let result = intcode.get(4);
     expect(result).toBe(99);
@@ -129,14 +129,6 @@ test("should pause when not sufficient input", () => {
     expect(intcode.compute(1, 2)).toBe(undefined);
     intcode.addInput(3);
     expect(intcode.resumeOperation()).toBe(6);
-});
-
-test("should pause after output", () => {
-    let intcode = new IntcodeComputer([3, 0, 3, 1, 3, 2, 1, 0, 1, 0, 1, 2, 0, 0, 4, 0, 99]);
-    intcode.compute(1, 2, 3);
-    expect(intcode.hasFinishedOperation()).toBe(false);
-    intcode.resumeOperation();
-    expect(intcode.hasFinishedOperation()).toBe(true);
 });
 
 test("takes no input and produces a copy of itself as output", () => {

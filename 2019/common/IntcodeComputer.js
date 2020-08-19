@@ -27,7 +27,16 @@ export class IntcodeComputer {
 
     compute(...input) {
         this.input = input;
-        return this.runMainLoop();
+        let output = [];
+        while (this.canProceed()){
+            output.push(this.runMainLoop());
+        }
+        output = output.filter(value => value != undefined);
+        if (output.length <= 1) {
+            return output[0];
+        } else {
+            return output;
+        }
     }
 
     runMainLoop() {
@@ -168,6 +177,12 @@ export class IntcodeComputer {
 
     hasFinishedOperation() {
         return this.status === this.StatusEnum.FINISHED || this.status === this.StatusEnum.ERROR;
+    }
+
+    canProceed() {
+        return this.status !== this.StatusEnum.FINISHED
+            && this.status !== this.StatusEnum.ERROR
+            && this.status !== this.StatusEnum.INPUT_PAUSE;
     }
 
     addInput(inputValue) {
