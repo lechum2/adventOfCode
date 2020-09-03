@@ -1,6 +1,6 @@
 import { getInput } from "./common/inputReader.js";
 
-const asteroids = getInput("day10test1.txt", "\n", String);
+const asteroids = getInput("day10.txt", "\n", String);
 const height = asteroids.length;
 const width = asteroids[0].length;
 
@@ -32,7 +32,7 @@ function countVisibleRightFor(x, y) {
         for (d = -radius + 1; d <= radius; d++) {
             b = y + d;
             if (isAsteroid(a, b)) {
-                d === 0 ? angles.add('r') : angles.add(c / d);
+                d === 0 ? angles.add("r") : angles.add(c / d);
             }
         }
         d = radius;
@@ -63,7 +63,7 @@ function countVisibleLeftFor(x, y) {
         for (d = -radius + 1; d <= radius; d++) {
             b = y + d;
             if (isAsteroid(a, b)) {
-                d === 0 ? angles.add('l') : angles.add(c / d);
+                d === 0 ? angles.add("l") : angles.add(c / d);
             }
         }
         d = radius;
@@ -77,4 +77,20 @@ function countVisibleLeftFor(x, y) {
     return angles.size;
 }
 
-console.log(countVisibleFor(2, 2));
+let maxVisible = 0;
+let maxX = 0;
+let maxY = 0;
+for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+        if (isAsteroid(x, y)) {
+            let visible = countVisibleFor(x, y);
+            if (visible > maxVisible) {
+                maxVisible = visible;
+                maxX = x;
+                maxY = y;
+            }
+        }
+    }
+}
+
+console.log(maxVisible, maxX, maxY);
