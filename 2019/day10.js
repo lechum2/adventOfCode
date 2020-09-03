@@ -32,7 +32,7 @@ function countVisibleRightFor(x, y) {
         for (d = -radius + 1; d <= radius; d++) {
             b = y + d;
             if (isAsteroid(a, b)) {
-                d === 0 ? angles.add(-1) : angles.add(c / d);
+                d === 0 ? angles.add('r') : angles.add(c / d);
             }
         }
         d = radius;
@@ -63,7 +63,7 @@ function countVisibleLeftFor(x, y) {
         for (d = -radius + 1; d <= radius; d++) {
             b = y + d;
             if (isAsteroid(a, b)) {
-                d === 0 ? angles.add(-1) : angles.add(c / d);
+                d === 0 ? angles.add('l') : angles.add(c / d);
             }
         }
         d = radius;
@@ -77,4 +77,4 @@ function countVisibleLeftFor(x, y) {
     return angles.size;
 }
 
-console.log(countVisibleFor(4, 4));
+console.log(countVisibleFor(2, 2));
