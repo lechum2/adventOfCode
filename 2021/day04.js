@@ -25,6 +25,9 @@ class BingoBoard {
         );
     }
     drawNumber(number) {
+        if (this.isWinning) {
+            return;
+        }
         this.lastDrawnNumber = number;
         for (const row of this.board) {
             for (const cell of row) {
@@ -74,14 +77,19 @@ function buildBoards(data) {
 }
 
 function draw(bingoNumbers, boards) {
+    let stillPlayingBoards = [...boards];
+    let lastWonBoard = new BingoBoard();
     for (const drawnNumber of bingoNumbers) {
-        for (let board of boards) {
+        for (let board of stillPlayingBoards) {
             board.drawNumber(drawnNumber);
-            if (board.isWinning) {
-                return board;
-            }
         }
+        let winningBoards = stillPlayingBoards.filter(board => board.isWinning);
+        if (winningBoards.length > 0) {
+            lastWonBoard = winningBoards[0];
+        }
+        stillPlayingBoards = stillPlayingBoards.filter(board => !board.isWinning);
     }
+    return lastWonBoard;
 }
 
 let data = getInput("day04.txt");
