@@ -14,6 +14,7 @@ class Cell {
 class BingoBoard {
     constructor() {
         this.board = [];
+        this.isWinning = false;
     }
     addRow(row) {
         this.board.push(
@@ -25,14 +26,36 @@ class BingoBoard {
     }
     drawNumber(number) {
         this.lastDrawnNumber = number;
-        for (const row in this.board) {
-            for (const cell in row) {
+        for (const row of this.board) {
+            for (const cell of row) {
                 cell.mark(number);
             }
         }
+        this.isWinning = this.checkWinning();
     }
-    isWinning() {
-        return this.isWinning;
+    checkWinning() {
+        for (const row of this.board) {
+            if (row.reduce((previous, current) => previous && current.marked, true)) {
+                return true;
+            }
+        }
+        for (let i = 0; i < 5; i++) {
+            let accumulator = true;
+            for (const row of this.board) {
+                accumulator = accumulator && row[i].marked;
+            }
+            if (accumulator) {
+                return true;
+            }
+        }
+        return false;
+    }
+    get score() {
+        let score = 0;
+        for (const row of this.board) {
+            score += row.reduce((previous, current) => previous + (current.marked ? 0 : current.value), 0);
+        }
+        return score * this.lastDrawnNumber;
     }
 }
 
@@ -50,11 +73,11 @@ function buildBoards(data) {
     return boards;
 }
 
-function draw(bingoNumbers) {
-    for (const drawnNumber in bingoNumbers) {
-        for (const board in boards) {
+function draw(bingoNumbers, boards) {
+    for (const drawnNumber of bingoNumbers) {
+        for (let board of boards) {
             board.drawNumber(drawnNumber);
-            if (board.isWinning()) {
+            if (board.isWinning) {
                 return board;
             }
         }
@@ -65,5 +88,5 @@ let data = getInput("day04.txt");
 const bingoNumbers = data.shift().split(",").map(Number);
 data.shift();
 const boards = buildBoards(data);
-const winningBoard = draw(bingoNumbers);
-console.log(winningBoard);
+const winningBoard = draw(bingoNumbers, boards);
+console.log(winningBoard.score);
