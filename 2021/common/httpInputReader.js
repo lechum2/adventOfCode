@@ -1,33 +1,16 @@
 import fs from "fs";
-import https from "https";
+import axios from "axios";
 
-const options = {
-    hostname: "adventofcode.com",
-    port: 443,
-    method: "GET",
-};
-
-export function getInput(year, day, separator = "\n", type = String) {
-    const token = fs.readFileSync("token").toString(); //.split(separator).map(type);
-    options.path = `/${year}/day/${day}/input`;
-    options.headers = {
-        Cookie: `session=${token}`,
-    };
-
-    let body = [];
-
-    const req = https.request(options, (res) => {
-        res.on("data", (chunk) => {
-            body.push(chunk);
+export async function getInput(year, day, separator = "\n", type = String) {
+    const token = fs.readFileSync("token").toString();
+    try {
+        const response = await axios.get(`https://adventofcode.com/${year}/day/${day}/input`, {
+            headers: {
+                Cookie: `session=${token}`,
+            },
         });
-        res.on("end", () => {
-            body = Buffer.concat(body).toString();
-            console.log(body);
-        });
-    });
-
-    req.on("error", (error) => {
+        return response.data.toString().split(separator).map(type);
+    } catch (error) {
         console.error(error);
-    });
-    req.end();
+    }
 }
