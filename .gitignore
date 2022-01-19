@@ -2,3 +2,4 @@ node_modules/
 jasmine_examples/
 .vscode/
 */token
+*/jsconfig.json
