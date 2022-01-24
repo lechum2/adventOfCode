@@ -9,7 +9,7 @@ export async function getInput(year, day, separator = "\n", type = String) {
                 Cookie: `session=${token}`,
             },
         });
-        return response.data.toString().split(separator).map(type);
+        return response.data.toString().trimEnd().split(separator).map(type);
     } catch (error) {
         console.error(error);
     }
