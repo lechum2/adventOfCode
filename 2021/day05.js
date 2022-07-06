@@ -7,32 +7,42 @@ class Diagram {
         this.height = 0;
     }
     addLine(startX, startY, endX, endY) {
-        this.width = Math.max(startX, endX, this.width);
-        this.height = Math.max(startY, endY, this.height);
-
-        let biggerX = startX;
-        let smallerX = endX;
-        if (startX < endX) {
-            biggerX = endX;
-            smallerX = startX;
+        if (startX === endX) {
+            this.addHorizontalLine(startX, startY, endY);
+        } else if (startY === endY) {
+            this.addVerticalLine(startX, startY, endX);
+        } else if ((startX > endX && startY > endY) || (startX < endX && startY < endY)) {
+            this.addDescendingDiagonal(startX, startY, endX, endY);
+        } else {
+            this.addAscendingDiagonal(startX, startY, endX, endY);
         }
-        let biggerY = startY;
-        let smallerY = endY;
-        if (startY < endY) {
-            biggerY = endY;
-            smallerY = startY;
+    }
+    addHorizontalLine(x, startY, endY) {
+        let smallerY = Math.min(startY, endY);
+        let biggerY = Math.max(startY, endY);
+        for (let i = 0; i < biggerY - smallerY; i++) {
+            this.mark(x, smallerY + i);
         }
-        for (let x = smallerX; x <= biggerX; x++) {
-            if (!this.field[x]) {
-                this.field[x] = new Array();
-            }
-            for (let y = smallerY; y <= biggerY; y++) {
-                if (!this.field[x][y]) {
-                    this.field[x][y] = 0;
-                }
-                this.field[x][y]++;
-            }
+    }
+    addVerticalLine(startX, y, endX) {
+        let smallerX = Math.min(startX, endX);
+        let biggerX = Math.max(startX, endX);
+        for (let i = 0; i < biggerX - smallerX; i++) {
+            this.mark(smallerX + i, y);
         }
+    }
+    addDescendingDiagonal(startX, startY, endX, endY) {}
+    addAscendingDiagonal(startX, startY, endX, endY) {}
+    mark(x, y) {
+        this.width = this.width < x + 1 ? x + 1 : this.width;
+        this.height = this.height < y + 1 ? y + 1 : this.height;
+        if (!this.field[x]) {
+            this.field[x] = new Array();
+        }
+        if (!this.field[x][y]) {
+            this.field[x][y] = 0;
+        }
+        this.field[x][y]++;
     }
     countOverlaps() {
         let count = 0;
@@ -47,28 +57,27 @@ class Diagram {
     }
     print() {
         for (let x = 0; x <= this.width; x++) {
-            let line = '';
+            let line = "";
             for (let y = 0; y <= this.height; y++) {
                 if (this.field[x] && this.field[x][y]) {
                     line += this.field[x][y];
                 } else {
                     line += ".";
                 }
-                console.log(line);
             }
+            console.log(line);
         }
     }
-
 }
 
-let data = await getInput(2021, 5);
+//let data = await getInput(2021, 5);
+let data = ["1,1 -> 1,5"];
 let diagram = new Diagram();
 for (const dataLine of data) {
     const points = dataLine.split(" -> ");
     const point1 = points[0].split(",").map(Number);
     const point2 = points[1].split(",").map(Number);
-    if (point1[0] === point2[0] || point1[1] === point2[1]) {
-        diagram.addLine(point1[0], point1[1], point2[0], point2[1]);
-    }
+    diagram.addLine(point1[0], point1[1], point2[0], point2[1]);
 }
+diagram.print();
 console.log(diagram.countOverlaps());
