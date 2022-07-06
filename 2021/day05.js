@@ -43,7 +43,6 @@ class Diagram {
         let biggerX = Math.max(startX, endX);
         let smallerX = Math.min(startX, endX);
         let biggerY = Math.max(startY, endY);
-        let smallerY = Math.min(startY, endY);
         for (let i = 0; i <= biggerX - smallerX; i++) {
             this.mark(smallerX + i, biggerY - i);
         }
