@@ -20,19 +20,34 @@ class Diagram {
     addHorizontalLine(x, startY, endY) {
         let smallerY = Math.min(startY, endY);
         let biggerY = Math.max(startY, endY);
-        for (let i = 0; i < biggerY - smallerY; i++) {
+        for (let i = 0; i <= biggerY - smallerY; i++) {
             this.mark(x, smallerY + i);
         }
     }
     addVerticalLine(startX, y, endX) {
         let smallerX = Math.min(startX, endX);
         let biggerX = Math.max(startX, endX);
-        for (let i = 0; i < biggerX - smallerX; i++) {
+        for (let i = 0; i <= biggerX - smallerX; i++) {
             this.mark(smallerX + i, y);
         }
     }
-    addDescendingDiagonal(startX, startY, endX, endY) {}
-    addAscendingDiagonal(startX, startY, endX, endY) {}
+    addDescendingDiagonal(startX, startY, endX, endY) {
+        let biggerX = Math.max(startX, endX);
+        let smallerX = Math.min(startX, endX);
+        let smallerY = Math.min(startY, endY);
+        for (let i = 0; i <= biggerX - smallerX; i++) {
+            this.mark(smallerX + i, smallerY + i);
+        }
+    }
+    addAscendingDiagonal(startX, startY, endX, endY) {
+        let biggerX = Math.max(startX, endX);
+        let smallerX = Math.min(startX, endX);
+        let biggerY = Math.max(startY, endY);
+        let smallerY = Math.min(startY, endY);
+        for (let i = 0; i <= biggerX - smallerX; i++) {
+            this.mark(smallerX + i, biggerY - i);
+        }
+    }
     mark(x, y) {
         this.width = this.width < x + 1 ? x + 1 : this.width;
         this.height = this.height < y + 1 ? y + 1 : this.height;
@@ -46,8 +61,8 @@ class Diagram {
     }
     countOverlaps() {
         let count = 0;
-        for (let x = 0; x <= this.width; x++) {
-            for (let y = 0; y <= this.height; y++) {
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
                 if (this.field[x] && this.field[x][y] && this.field[x][y] > 1) {
                     count++;
                 }
@@ -56,9 +71,9 @@ class Diagram {
         return count;
     }
     print() {
-        for (let x = 0; x <= this.width; x++) {
+        for (let x = 0; x < this.width; x++) {
             let line = "";
-            for (let y = 0; y <= this.height; y++) {
+            for (let y = 0; y < this.height; y++) {
                 if (this.field[x] && this.field[x][y]) {
                     line += this.field[x][y];
                 } else {
@@ -70,8 +85,7 @@ class Diagram {
     }
 }
 
-//let data = await getInput(2021, 5);
-let data = ["1,1 -> 1,5"];
+let data = await getInput(2021, 5);
 let diagram = new Diagram();
 for (const dataLine of data) {
     const points = dataLine.split(" -> ");
@@ -79,5 +93,4 @@ for (const dataLine of data) {
     const point2 = points[1].split(",").map(Number);
     diagram.addLine(point1[0], point1[1], point2[0], point2[1]);
 }
-diagram.print();
 console.log(diagram.countOverlaps());
