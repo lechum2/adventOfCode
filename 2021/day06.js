@@ -3,16 +3,18 @@ import { getInput } from "./common/httpInputReader.js";
 class LanternfishModel {
     constructor(lanternfishArray) {
         this.lanternfishArray = lanternfishArray;
+        this.count = 0;
     }
     calculateDay() {
         let previousDayArray = this.lanternfishArray;
         this.lanternfishArray = new Array();
-        for (let i = 0; i < previousDayArray.length; i++) {
-            if (previousDayArray[i] === 0) {
+        while (previousDayArray.length > 0) {
+            let value = previousDayArray.pop();
+            if (value === 0) {
                 this.lanternfishArray.push(8);
                 this.lanternfishArray.push(6);
             } else {
-                this.lanternfishArray.push(--previousDayArray[i]);
+                this.lanternfishArray.push(--value);
             }
         }
     }
@@ -24,9 +26,27 @@ class LanternfishModel {
     count() {
         return this.lanternfishArray.length;
     }
+    calculateSpawnedFromOne(startingNumber, days) {
+        if (startingNumber >= days) return 0;
+        let count = 0;
+        let leftDays = days - startingNumber - 1;
+        while (leftDays >= 0) {
+            count++;
+            count += this.calculateSpawnedFromOne(8, leftDays);
+            leftDays -= 7;
+        }
+        return count;
+    }
+    countAfterDays(days) {
+        let count = 0;
+        for (const startingNumber of this.lanternfishArray) {
+            count++;
+            count += this.calculateSpawnedFromOne(startingNumber, days);
+        }
+        return count;
+    }
 }
 
 let data = await getInput(2021, 6, ",", Number);
 let model = new LanternfishModel(data);
-model.calculateDays(80);
-console.log(model.count());
+console.log(model.countAfterDays(256));
