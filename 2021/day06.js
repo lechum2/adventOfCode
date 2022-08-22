@@ -1,4 +1,4 @@
-import { getInput } from "./common/httpInputReader.js";
+import { getInput } from "../2019/common/inputReader.js";
 
 class LanternfishModel {
     constructor(lanternfishArray) {
@@ -39,14 +39,16 @@ class LanternfishModel {
     }
     countAfterDays(days) {
         let count = 0;
-        for (const startingNumber of this.lanternfishArray) {
+        for (let i = 0; i < this.lanternfishArray.length; i++) {
             count++;
-            count += this.calculateSpawnedFromOne(startingNumber, days);
+            count += this.calculateSpawnedFromOne(this.lanternfishArray[i], days);
+            console.debug(`${i+1}/${this.lanternfishArray.length}`);
         }
         return count;
     }
 }
 
-let data = await getInput(2021, 6, ",", Number);
+//let data = await getInput(2021, 6, ",", Number);
+let data = getInput("day06.txt", ",", Number);
 let model = new LanternfishModel(data);
 console.log(model.countAfterDays(256));
