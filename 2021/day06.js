@@ -1,4 +1,4 @@
-import { getInput } from "../2019/common/inputReader.js";
+import { getInput } from "./common/httpInputReader.js";
 
 class LanternfishModel {
     constructor(lanternfishArray) {
@@ -48,7 +48,6 @@ class LanternfishModel {
     }
 }
 
-//let data = await getInput(2021, 6, ",", Number);
-let data = getInput("day06.txt", ",", Number);
+let data = await getInput(2021, 6, ",", Number);
 let model = new LanternfishModel(data);
 console.log(model.countAfterDays(256));
