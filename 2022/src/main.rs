@@ -14,11 +14,14 @@ fn main() {
     }
     elf_total_calories.sort();
     elf_total_calories.reverse();
-    print!("Elf with max calories has {:?}", elf_total_calories.get(0).unwrap());
-    print!(
+    println!(
+        "Elf with max calories has {:?}",
+        elf_total_calories.get(0).unwrap()
+    );
+    println!(
         "Top 3 elfs have {:?} calories",
         elf_total_calories.get(0).unwrap()
-        + elf_total_calories.get(1).unwrap()
-        + elf_total_calories.get(2).unwrap()
+            + elf_total_calories.get(1).unwrap()
+            + elf_total_calories.get(2).unwrap()
     );
 }
