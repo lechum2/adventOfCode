@@ -1,7 +1,5 @@
-mod http_input_reader;
-
 fn main() {
-    let input_vector = http_input_reader::get_input(2022, 1, "\n");
+    let input_vector = input_reader::get_input(2022, 1, "\n");
     let mut elf_total_calories = Vec::new();
     let mut single_elf_calories = 0;
     for line in input_vector {
