@@ -1,5 +1,39 @@
 fn main() {
     let input_vector = input_reader::get_input(2022, 2, "\n");
+    let mut score = 0;
+    for line in input_vector {
+        if line.is_empty() {
+            continue;
+        }
+        let choices:Vec<&str> = line.split(" ").collect();
+        match choices.get(1) {
+            Some(&"X") => {
+                score += 1;
+                match choices.get(0) {
+                    Some(&"C") => score += 6,
+                    Some(&"A") => score += 3,
+                    _ => ()
+                }
+            },
+            Some(&"Y") => {
+                score += 2;
+                match choices.get(0) {
+                    Some(&"A") => score += 6,
+                    Some(&"B") => score += 3,
+                    _ => ()
+                }
+            },
+            Some(&"Z") => {
+                score += 3;
+                match choices.get(0) {
+                    Some(&"B") => score += 6,
+                    Some(&"C") => score += 3,
+                    _ => ()
+                }
+            }
+            _ => panic!("Unsupported value found: {:?}", choices.get(1).unwrap())
+        }
+    }
 
-    println!("{:?}", input_vector);
+    println!("The final score is {score}");
 }
