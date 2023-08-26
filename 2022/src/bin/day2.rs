@@ -1,3 +1,17 @@
+enum GameChoise {
+    Rock,
+    Paper,
+    Scissors
+}
+impl GameChoise {
+    fn points(&self) -> u8 {
+        match self {
+            GameChoise::Rock => 1,
+            GameChoise::Paper => 2,
+            GameChoise::Scissors => 3
+        }
+    }
+}
 fn main() {
     let input_vector = input_reader::get_input(2022, 2, "\n");
     let mut score = 0;
