@@ -13,7 +13,7 @@ impl GameChoise {
         }
     }
 
-    fn scoreWith(&self, other: &GameChoise) -> u8 {
+    fn score_with(&self, other: &GameChoise) -> u8 {
         match self {
             GameChoise::Rock => {
                 match other {
@@ -36,6 +36,13 @@ impl GameChoise {
                     GameChoise::Scissors => 3,
                 }
             }
+        }
+    }
+
+    fn from(letter: &str) -> GameChoise {
+        match letter {
+            (&"A", &"X") => GameChoise::Paper,
+            _ => panic!("Not supported letter")
         }
     }
 }
