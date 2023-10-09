@@ -5,7 +5,7 @@ enum GameChoise {
 }
 
 impl GameChoise {
-    fn points(&self) -> u8 {
+    fn points(&self) -> u32 {
         match self {
             GameChoise::Rock => 1,
             GameChoise::Paper => 2,
@@ -13,7 +13,7 @@ impl GameChoise {
         }
     }
 
-    fn score_with(&self, other: &GameChoise) -> u8 {
+    fn score_with(&self, other: &GameChoise) -> u32 {
         match self {
             GameChoise::Rock => {
                 match other {
@@ -41,47 +41,26 @@ impl GameChoise {
 
     fn from(letter: &str) -> GameChoise {
         match letter {
-            (&"A", &"X") => GameChoise::Paper,
-            _ => panic!("Not supported letter")
+            "A" | "X" => GameChoise::Rock,
+            "B" | "Y" => GameChoise::Paper,
+            "C" | "Z" => GameChoise::Scissors,
+            _ => panic!("Unsupported value found: {:?}", letter)
         }
     }
 }
 
 fn main() {
     let input_vector = input_reader::get_input(2022, 2, "\n");
-    let mut score = 0;
+    let mut score: u32 = 0;
     for line in input_vector {
         if line.is_empty() {
             continue;
         }
-        let choices:Vec<&str> = line.split(" ").collect();
-        match choices.get(1) {
-            Some(&"X") => {
-                score += 1;
-                match choices.get(0) {
-                    Some(&"C") => score += 6,
-                    Some(&"A") => score += 3,
-                    _ => ()
-                }
-            },
-            Some(&"Y") => {
-                score += 2;
-                match choices.get(0) {
-                    Some(&"A") => score += 6,
-                    Some(&"B") => score += 3,
-                    _ => ()
-                }
-            },
-            Some(&"Z") => {
-                score += 3;
-                match choices.get(0) {
-                    Some(&"B") => score += 6,
-                    Some(&"C") => score += 3,
-                    _ => ()
-                }
-            }
-            _ => panic!("Unsupported value found: {:?}", choices.get(1).unwrap())
-        }
+        let choices: Vec<&str> = line.split(" ").collect();
+        let opponent = GameChoise::from(choices.get(0).unwrap());
+        let me = GameChoise::from(choices.get(1).unwrap());
+        score += me.points();
+        score += me.score_with(&opponent);
     }
 
     println!("The final score is {score}");
