@@ -13,6 +13,15 @@ impl GameChoise {
         }
     }
 
+    fn score(letter: &str) -> u32 {
+        match letter {
+            "X" => 0,
+            "Y" => 3,
+            "Z" => 6,
+            _ => 0,
+        }
+    }
+
     fn score_with(&self, other: &GameChoise) -> u32 {
         match self {
             GameChoise::Rock => {
@@ -51,7 +60,8 @@ impl GameChoise {
 
 fn main() {
     let input_vector = input_reader::get_input(2022, 2, "\n");
-    let mut score: u32 = 0;
+    let mut score1: u32 = 0;
+    let mut score2: u32 = 0;
     for line in input_vector {
         if line.is_empty() {
             continue;
@@ -59,9 +69,12 @@ fn main() {
         let choices: Vec<&str> = line.split(" ").collect();
         let opponent = GameChoise::from(choices.get(0).unwrap());
         let me = GameChoise::from(choices.get(1).unwrap());
-        score += me.points();
-        score += me.score_with(&opponent);
+        score1 += me.points();
+        score1 += me.score_with(&opponent);
+        score2 += opponent.points();
+        score2 += GameChoise::score(choices.get(1).unwrap());
     }
 
-    println!("The final score is {score}");
+    println!("The final score is {score1}");
+    println!("The final score for second method is {score2}");
 }
