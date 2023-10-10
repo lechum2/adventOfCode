@@ -58,6 +58,27 @@ impl GameChoise {
     }
 }
 
+enum GameResult {
+    Loss,
+    Draw,
+    Win,
+}
+
+impl GameResult {
+    fn score(&self) -> u32 {
+        match self {
+            GameResult::Loss => 0,
+            GameResult::Draw => 3,
+            GameResult::Win => 6,
+        }
+    }
+
+    fn from(letter: &str) -> self {
+        match letter {
+
+        }
+    }
+}
 fn main() {
     let input_vector = input_reader::get_input(2022, 2, "\n");
     let mut score1: u32 = 0;
