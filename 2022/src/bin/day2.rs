@@ -1,84 +1,71 @@
+use std::cmp::Ordering;
+
+#[derive(PartialEq, Copy, Clone)]
 enum GameChoise {
-    Rock,
-    Paper,
-    Scissors
+    Rock = 1,
+    Paper = 2,
+    Scissors = 3,
+}
+
+impl PartialOrd for GameChoise {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        if *self == GameChoise::Rock && *other == GameChoise::Scissors
+            || *self == GameChoise::Paper && *other == GameChoise::Rock
+            || *self == GameChoise::Scissors && *other == GameChoise::Paper
+        {
+            return Some(Ordering::Greater);
+        }
+        return Some(Ordering::Less);
+    }
 }
 
 impl GameChoise {
     fn points(&self) -> u32 {
-        match self {
-            GameChoise::Rock => 1,
-            GameChoise::Paper => 2,
-            GameChoise::Scissors => 3
-        }
+        *self as u32
     }
 
-    fn score(letter: &str) -> u32 {
-        match letter {
-            "X" => 0,
-            "Y" => 3,
-            "Z" => 6,
-            _ => 0,
+    fn result(&self, other: &Self) -> GameResult {
+        if *self == *other {
+            return GameResult::Draw;
         }
+        if *self > *other {
+            return GameResult::Win;
+        }
+        return GameResult::Loss;
     }
 
-    fn score_with(&self, other: &GameChoise) -> u32 {
-        match self {
-            GameChoise::Rock => {
-                match other {
-                    GameChoise::Rock => 3,
-                    GameChoise::Paper => 0,
-                    GameChoise::Scissors => 6,
-                }
-            }
-            GameChoise::Paper => {
-                match other {
-                    GameChoise::Rock => 6,
-                    GameChoise::Paper => 3,
-                    GameChoise::Scissors => 0,
-                }
-            }
-            GameChoise::Scissors => {
-                match other {
-                    GameChoise::Rock => 0,
-                    GameChoise::Paper => 6,
-                    GameChoise::Scissors => 3,
-                }
-            }
-        }
-    }
-
-    fn from(letter: &str) -> GameChoise {
+    fn from(letter: &str) -> Self {
         match letter {
             "A" | "X" => GameChoise::Rock,
             "B" | "Y" => GameChoise::Paper,
             "C" | "Z" => GameChoise::Scissors,
-            _ => panic!("Unsupported value found: {:?}", letter)
+            _ => panic!("Unsupported value found: {:?}", letter),
         }
     }
 }
 
+#[derive(Copy, Clone)]
 enum GameResult {
-    Loss,
-    Draw,
-    Win,
+    Loss = 0,
+    Draw = 3,
+    Win = 6,
 }
 
 impl GameResult {
     fn score(&self) -> u32 {
-        match self {
-            GameResult::Loss => 0,
-            GameResult::Draw => 3,
-            GameResult::Win => 6,
-        }
+        *self as u32
     }
 
-    fn from(letter: &str) -> self {
+    fn from(letter: &str) -> Self {
         match letter {
-
+            "X" => GameResult::Loss,
+            "Y" => GameResult::Draw,
+            "Z" => GameResult::Win,
+            _ => panic!("Unsupported value found: {:?}", letter),
         }
     }
 }
+
 fn main() {
     let input_vector = input_reader::get_input(2022, 2, "\n");
     let mut score1: u32 = 0;
@@ -91,9 +78,7 @@ fn main() {
         let opponent = GameChoise::from(choices.get(0).unwrap());
         let me = GameChoise::from(choices.get(1).unwrap());
         score1 += me.points();
-        score1 += me.score_with(&opponent);
-        score2 += opponent.points();
-        score2 += GameChoise::score(choices.get(1).unwrap());
+        score1 += me.result(&opponent).score();
     }
 
     println!("The final score is {score1}");
