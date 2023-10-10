@@ -64,6 +64,27 @@ impl GameResult {
             _ => panic!("Unsupported value found: {:?}", letter),
         }
     }
+
+    fn other_choise(&self, choise: &GameChoise) -> GameChoise {
+        match self {
+            GameResult::Draw => *choise,
+            GameResult::Win => {
+                match choise {
+                    GameChoise::Paper => GameChoise::Scissors,
+                    GameChoise::Rock => GameChoise::Paper,
+                    GameChoise::Scissors => GameChoise::Rock,
+                }
+            }
+            GameResult::Loss => {
+                match choise {
+                    GameChoise::Rock => GameChoise::Scissors,
+                    GameChoise::Paper => GameChoise::Rock,
+                    GameChoise::Scissors => GameChoise::Paper,
+                }
+            }
+        }
+
+    }
 }
 
 fn main() {
@@ -79,6 +100,9 @@ fn main() {
         let me = GameChoise::from(choices.get(1).unwrap());
         score1 += me.points();
         score1 += me.result(&opponent).score();
+        let result = GameResult::from(choices.get(1).unwrap());
+        score2 += result.score();
+        score2 += result.other_choise(&opponent).points();
     }
 
     println!("The final score is {score1}");
