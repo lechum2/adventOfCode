@@ -9,6 +9,9 @@ enum GameChoise {
 
 impl PartialOrd for GameChoise {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        if *self == *other {
+            return Some(Ordering::Equal);
+        }
         if *self == GameChoise::Rock && *other == GameChoise::Scissors
             || *self == GameChoise::Paper && *other == GameChoise::Rock
             || *self == GameChoise::Scissors && *other == GameChoise::Paper
@@ -67,17 +70,14 @@ impl GameResult {
 
     fn other_choise(&self, choise: &GameChoise) -> GameChoise {
         if *self == GameResult::Draw {
-            println!("Game result is draw {self:?}, so we both choose {choise:?}");
             return *choise;
         }
         let all_possible_values = [GameChoise::Rock, GameChoise::Paper, GameChoise::Scissors];
         for value in all_possible_values {
             if *self == GameResult::Win && value > *choise {
-                println!("Game result should be win {self:?}, opponent {choise:?}, me {value:?}");
                 return value;
             }
             else if *self == GameResult::Loss && value < *choise {
-                println!("Game result should be loss {self:?}, opponent {choise:?}, me {value:?}");
                 return value;
             }
         }
