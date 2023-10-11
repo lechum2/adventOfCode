@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 
-#[derive(PartialEq, Copy, Clone)]
+#[derive(PartialEq, Copy, Clone, Debug)]
 enum GameChoise {
     Rock = 1,
     Paper = 2,
@@ -44,7 +44,7 @@ impl GameChoise {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(PartialEq, Copy, Clone, Debug)]
 enum GameResult {
     Loss = 0,
     Draw = 3,
@@ -66,24 +66,22 @@ impl GameResult {
     }
 
     fn other_choise(&self, choise: &GameChoise) -> GameChoise {
-        match self {
-            GameResult::Draw => *choise,
-            GameResult::Win => {
-                match choise {
-                    GameChoise::Paper => GameChoise::Scissors,
-                    GameChoise::Rock => GameChoise::Paper,
-                    GameChoise::Scissors => GameChoise::Rock,
-                }
+        if *self == GameResult::Draw {
+            println!("Game result is draw {self:?}, so we both choose {choise:?}");
+            return *choise;
+        }
+        let all_possible_values = [GameChoise::Rock, GameChoise::Paper, GameChoise::Scissors];
+        for value in all_possible_values {
+            if *self == GameResult::Win && value > *choise {
+                println!("Game result should be win {self:?}, opponent {choise:?}, me {value:?}");
+                return value;
             }
-            GameResult::Loss => {
-                match choise {
-                    GameChoise::Rock => GameChoise::Scissors,
-                    GameChoise::Paper => GameChoise::Rock,
-                    GameChoise::Scissors => GameChoise::Paper,
-                }
+            else if *self == GameResult::Loss && value < *choise {
+                println!("Game result should be loss {self:?}, opponent {choise:?}, me {value:?}");
+                return value;
             }
         }
-
+        panic!("Could not find the proper choice for current condition");
     }
 }
 
