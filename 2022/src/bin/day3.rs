@@ -1,7 +1,7 @@
 #[cfg(test)]
-mod test {
+mod day3_test {
     #[test]
-    fn day3_when_given_string_should_find_duplicated_char() {
+    fn when_given_string_should_find_duplicated_char() {
         let input = "vJrwpWtwJgWrhcsFMMfFFhFp";
         let result = crate::get_duplicated_char(&input);
         assert_eq!(result, 'p');
