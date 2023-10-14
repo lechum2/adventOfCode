@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, HashMap};
 
 #[cfg(test)]
 mod day3_test {
@@ -70,6 +70,7 @@ fn get_char_value(letter: char) -> u32 {
 fn main() {
     let input_vector = input_reader::get_input(2022, 3, "\n");
     let mut result: u32 = 0;
+    let mut rucksucks_by_badge = HashMap::new();
     for line in input_vector {
         if line.is_empty() {
             continue;
@@ -77,6 +78,19 @@ fn main() {
         for duplicate in get_duplicated_chars(&line) {
             result += get_char_value(duplicate);
         }
+        for badge in line.chars() {
+            rucksucks_by_badge
+                .entry(badge)
+                .and_modify(|set: &mut HashSet<String>| { set.insert(line.clone()); })
+                .or_insert([line.clone()].into());
+        }
     }
     println!("Result is: {result}");
+    for key in rucksucks_by_badge.keys() {
+        println!("{} is {}", key, rucksucks_by_badge[key].len());
+    }
+    rucksucks_by_badge.retain(|_, v| v.len() == 3);
+    println!("{:?}", rucksucks_by_badge);
+    let result2 = rucksucks_by_badge.keys().fold(0, |acc, badge| acc + get_char_value(*badge));
+    println!("Result for the badges is: {result2}");
 }
