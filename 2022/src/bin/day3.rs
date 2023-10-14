@@ -1,4 +1,4 @@
-use std::collections::{HashSet, HashMap};
+use std::collections::HashSet;
 
 #[cfg(test)]
 mod day3_test {
@@ -60,8 +60,7 @@ fn get_duplicated_chars(line: &str) -> HashSet<char> {
 fn get_char_value(letter: char) -> u32 {
     if letter >= 'a' && letter <= 'z' {
         return letter as u32 - 'a' as u32 + 1;
-    }
-    else if letter >= 'A' && letter <= 'Z' {
+    } else if letter >= 'A' && letter <= 'Z' {
         return letter as u32 - 'A' as u32 + 27;
     }
     panic!("Not supported character: {letter}");
@@ -70,27 +69,26 @@ fn get_char_value(letter: char) -> u32 {
 fn main() {
     let input_vector = input_reader::get_input(2022, 3, "\n");
     let mut result: u32 = 0;
-    let mut rucksucks_by_badge = HashMap::new();
-    for line in input_vector {
+    for line in &input_vector {
         if line.is_empty() {
             continue;
         }
         for duplicate in get_duplicated_chars(&line) {
             result += get_char_value(duplicate);
         }
-        for badge in line.chars() {
-            rucksucks_by_badge
-                .entry(badge)
-                .and_modify(|set: &mut HashSet<String>| { set.insert(line.clone()); })
-                .or_insert([line.clone()].into());
-        }
     }
     println!("Result is: {result}");
-    for key in rucksucks_by_badge.keys() {
-        println!("{} is {}", key, rucksucks_by_badge[key].len());
+
+    let mut result2: u32 = 0;
+    for i in 0..input_vector.len() / 3 {
+        for badge in input_vector[i * 3].chars() {
+            if input_vector[i * 3 + 1].chars().any(|c| c == badge)
+                && input_vector[i * 3 + 2].chars().any(|c| c == badge)
+            {
+                result2 += get_char_value(badge);
+                break;
+            }
+        }
     }
-    rucksucks_by_badge.retain(|_, v| v.len() == 3);
-    println!("{:?}", rucksucks_by_badge);
-    let result2 = rucksucks_by_badge.keys().fold(0, |acc, badge| acc + get_char_value(*badge));
-    println!("Result for the badges is: {result2}");
+    println!("Result for the second problem is {result2}");
 }
