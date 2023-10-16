@@ -21,11 +21,21 @@ impl Assignment {
         }
         return false;
     }
+
+    fn overlaps_with(&self, other: &Assignment) -> bool {
+        if self.from <= other.from && self.to >= other.from {
+            return true;
+        } else if self.from >= other.from && self.from <= other.to {
+            return true;
+        }
+        return false;
+    }
 }
 
 fn main() {
     let input_vector = input_reader::get_input(2022, 4, "\n");
-    let mut count: u32 = 0;
+    let mut count_containing: u32 = 0;
+    let mut count_overlapping: u32 = 0;
     for line in input_vector {
         if line.is_empty() {
             continue;
@@ -36,8 +46,12 @@ fn main() {
         if first_assignment.contains(&second_assignment)
             || second_assignment.contains(&first_assignment)
         {
-            count += 1;
+            count_containing += 1;
+        }
+        if first_assignment.overlaps_with(&second_assignment) {
+            count_overlapping += 1;
         }
     }
-    println!("Assingments count that one contains the other: {count}");
+    println!("Assingments count that one contains the other: {count_containing}");
+    println!("Assingments count that overlap: {count_overlapping}");
 }
