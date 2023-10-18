@@ -1,41 +1,22 @@
-use std::collections::BinaryHeap;
 use regex::Regex;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 struct Cargo {
-    stacks: Vec::<BinaryHeap<char>>
-}
-
-impl PartialEq for Cargo {
-    fn eq(&self, other: &Self) -> bool {
-        if self.stacks.len() != other.stacks.len() {
-            return false;
-        }
-        for i in 0..self.stacks.len() {
-            if self.stacks.get(i).unwrap().len() != other.stacks.get(i).unwrap().len() {
-                return false;
-            }
-            if self.stacks.get(i).unwrap().peek() != other.stacks.get(i).unwrap().peek() {
-                return false;
-            }
-        }
-
-        return true;
-    }
+    stacks: Vec::<Vec::<char>>
 }
 
 impl Cargo {
-    fn from(input: Vec<&str>) -> Self {
+    fn from(mut input: Vec<&str>) -> Self {
+        input.reverse();
         let mut cargo = Cargo {
-            stacks: Vec::<BinaryHeap<char>>::new(),
+            stacks: Vec::<Vec::<char>>::new(),
         };
 
         let number_regex = Regex::new(r"[0-9]+").unwrap();
         let match_crate = Regex::new(r"[ ]{3}|[A-Z]+").unwrap();
         let stacks_count = number_regex.find_iter(input.get(0).unwrap()).count();
-        println!("Number of stacks found: {stacks_count}");
         for _i in 0..stacks_count {
-            cargo.stacks.push(BinaryHeap::<char>::new());
+            cargo.stacks.push(Vec::<char>::new());
         }
 
         for i in 1..input.len() {
@@ -53,27 +34,39 @@ impl Cargo {
 
 fn main() {
     let input_vector = input_reader::get_input(2022, 5, "\n");
+    let mut input_iterator = input_vector.iter();
+    let mut initial_state = Vec::<&str>::new();
+    let mut line = input_iterator.next();
+    while line != None {
+        if line.unwrap().is_empty() {
+            break;
+        }
+        initial_state.push(line.unwrap());
+        line = input_iterator.next();
+    }
+    let cargo_space = Cargo::from(initial_state);
+    println!("{:?}", cargo_space);
+    line = input_iterator.next();
+    println!("next line is: {:?}", line);
 }
 
 #[cfg(test)]
 mod day5_test {
-    use std::collections::BinaryHeap;
-
     #[test]
     fn should_create_structre_from_text_input() {
         let input = vec![
-            " 1   2   3 ",
-            "[Z] [M] [P]",
-            "[N] [C]    ",
             "    [D]    ",
+            "[N] [C]    ",
+            "[Z] [M] [P]",
+            " 1   2   3 ",
         ];
 
         let result = crate::Cargo::from(input);
         let expected = crate::Cargo {
             stacks: vec![
-                BinaryHeap::from(['Z', 'N']),
-                BinaryHeap::from(['M', 'C', 'D']),
-                BinaryHeap::from(['P']),
+                vec!['Z', 'N'],
+                vec!['M', 'C', 'D'],
+                vec!['P'],
             ]
         };
         assert_eq!(result, expected)
