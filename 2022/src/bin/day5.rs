@@ -5,6 +5,12 @@ struct Cargo {
     stacks: Vec::<Vec::<char>>
 }
 
+impl fmt::Debug for Cargo {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Point [{} {}]", self.x, self.y)
+    }
+}
+
 impl Cargo {
     fn from(mut input: Vec<&str>) -> Self {
         input.reverse();
@@ -33,8 +39,26 @@ impl Cargo {
 
     fn move_crate(&mut self, count: usize, from: usize, to: usize) {
         for _i in 0..count {
-            let crate_letter: char = self.stacks.get_mut(from - 1).unwrap().pop().unwrap();
+            let crate_letter: char = self.stacks.get_mut(from - 1).unwrap().pop().unwrap_or(' ');
+            if crate_letter == ' ' {
+                continue;
+            }
             self.stacks.get_mut(to - 1).unwrap().push(crate_letter);
+        }
+    }
+
+    fn apply_command(&mut self, command: &str) {
+        println!("Applying command: {command}");
+        let paramters: Vec<&str> = command.split(" ").collect();
+        self.move_crate(
+            paramters.get(1).unwrap().parse().unwrap(),
+            paramters.get(3).unwrap().parse().unwrap(),
+            paramters.get(5).unwrap().parse().unwrap(),
+        );
+    }
+    fn print_top(&self) {
+        for stack in &self.stacks {
+            print!("{}", stack.last().unwrap_or(&' '));
         }
     }
 }
@@ -51,10 +75,17 @@ fn main() {
         initial_state.push(line.unwrap());
         line = input_iterator.next();
     }
-    let cargo_space = Cargo::from(initial_state);
-    println!("{:?}", cargo_space);
+    let mut cargo_space = Cargo::from(initial_state);
+
     line = input_iterator.next();
-    println!("next line is: {:?}", line);
+    while line != None {
+        if line.unwrap().is_empty() {
+            break;
+        }
+        cargo_space.apply_command(line.unwrap());
+        line = input_iterator.next();
+    }
+    cargo_space.print_top();
 }
 
 #[cfg(test)]
@@ -98,7 +129,27 @@ mod day5_test {
             ]
         };
         assert_eq!(cargo_space, expected);
-
     }
 
+    #[test]
+    fn should_execute_command() {
+
+        let mut cargo_space = crate::Cargo {
+            stacks: vec![
+                vec!['Z', 'N'],
+                vec!['M', 'C', 'D'],
+                vec!['P'],
+            ]
+        };
+        cargo_space.apply_command("move 2 from 1 to 3");
+
+        let expected = crate::Cargo {
+            stacks: vec![
+                vec![],
+                vec!['M', 'C', 'D'],
+                vec!['P', 'N', 'Z'],
+            ]
+        };
+        assert_eq!(cargo_space, expected);
+    }
 }
