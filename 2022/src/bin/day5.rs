@@ -32,7 +32,7 @@ impl Cargo {
         };
 
         let number_regex = Regex::new(r"[0-9]+").unwrap();
-        let match_crate = Regex::new(r"[ ]{3}|[A-Z]+").unwrap();
+        let match_crate = Regex::new(r"[ ]{4}|[A-Z]+").unwrap();
         let stacks_count = number_regex.find_iter(input.get(0).unwrap()).count();
         for _i in 0..stacks_count {
             cargo.stacks.push(Vec::<char>::new());
@@ -85,15 +85,14 @@ fn main() {
         line = input_iterator.next();
     }
     let mut cargo_space = Cargo::from(initial_state);
+    println!("{cargo_space}");
 
     line = input_iterator.next();
     while line != None {
         if line.unwrap().is_empty() {
             break;
         }
-        println!("{}", line.unwrap());
         cargo_space.apply_command(line.unwrap());
-        println!("{cargo_space}");
         line = input_iterator.next();
     }
     cargo_space.print_top();
