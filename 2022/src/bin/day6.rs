@@ -14,6 +14,15 @@ fn get_packet_marker_start(signal: &str) -> usize {
     return chars.len();
 }
 
+fn has_unique_elements<T>(iter: T) -> bool
+where
+    T: IntoIterator,
+    T::Item: Eq + Hash,
+{
+    let mut uniq = HashSet::new();
+    iter.into_iter().all(move |x| uniq.insert(x))
+}
+
 fn main() {
     let input_vector = input_reader::get_input(2022, 6, "\n");
     for line in input_vector {
