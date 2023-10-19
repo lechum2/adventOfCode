@@ -151,7 +151,7 @@ mod day5_test {
                 vec!['P'],
             ]
         };
-        cargo_space.move_crate(2, 1, 3);
+        cargo_space.move_crates_one_by_one(2, 1, 3);
 
         let expected = crate::Cargo {
             stacks: vec![
@@ -173,7 +173,7 @@ mod day5_test {
                 vec!['P'],
             ]
         };
-        cargo_space.apply_command("move 2 from 1 to 3");
+        cargo_space.apply_command_for_one_by_one("move 2 from 1 to 3");
 
         let expected = crate::Cargo {
             stacks: vec![
