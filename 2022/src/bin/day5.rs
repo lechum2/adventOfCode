@@ -1,13 +1,26 @@
 use regex::Regex;
+use std::fmt;
 
 #[derive(Debug, PartialEq)]
 struct Cargo {
     stacks: Vec::<Vec::<char>>
 }
 
-impl fmt::Debug for Cargo {
+impl fmt::Display for Cargo {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Point [{} {}]", self.x, self.y)
+        let biggest_stack_lenght: usize = self.stacks.iter().max_by_key(|stack| stack.len()).unwrap().len();
+        for i in (0..biggest_stack_lenght).rev() {
+            for j in 0..self.stacks.len() {
+                write!(f, " {} ", self.stacks.get(j).unwrap().get(i).unwrap_or(&' '))?;
+            }
+            write!(f, "\n")?;
+        }
+
+        for i in 0..self.stacks.len() {
+            write!(f, " {} ", i + 1)?;
+        }
+
+        write!(f, "\n")
     }
 }
 
@@ -39,16 +52,12 @@ impl Cargo {
 
     fn move_crate(&mut self, count: usize, from: usize, to: usize) {
         for _i in 0..count {
-            let crate_letter: char = self.stacks.get_mut(from - 1).unwrap().pop().unwrap_or(' ');
-            if crate_letter == ' ' {
-                continue;
-            }
+            let crate_letter: char = self.stacks.get_mut(from - 1).unwrap().pop().unwrap();
             self.stacks.get_mut(to - 1).unwrap().push(crate_letter);
         }
     }
 
     fn apply_command(&mut self, command: &str) {
-        println!("Applying command: {command}");
         let paramters: Vec<&str> = command.split(" ").collect();
         self.move_crate(
             paramters.get(1).unwrap().parse().unwrap(),
@@ -82,7 +91,9 @@ fn main() {
         if line.unwrap().is_empty() {
             break;
         }
+        println!("{}", line.unwrap());
         cargo_space.apply_command(line.unwrap());
+        println!("{cargo_space}");
         line = input_iterator.next();
     }
     cargo_space.print_top();
