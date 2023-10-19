@@ -50,21 +50,40 @@ impl Cargo {
         return cargo;
     }
 
-    fn move_crate(&mut self, count: usize, from: usize, to: usize) {
+    fn move_crates_one_by_one(&mut self, count: usize, from: usize, to: usize) {
         for _i in 0..count {
             let crate_letter: char = self.stacks.get_mut(from - 1).unwrap().pop().unwrap();
             self.stacks.get_mut(to - 1).unwrap().push(crate_letter);
         }
     }
 
-    fn apply_command(&mut self, command: &str) {
+    fn move_crates(&mut self, count: usize, from: usize, to: usize) {
+        let from_len = self.stacks.get(from - 1).unwrap().len();
+        let start_index = from_len - count;
+        for _i in 0..count {
+            let crate_letter: char = self.stacks.get_mut(from - 1).unwrap().remove(start_index);
+            self.stacks.get_mut(to - 1).unwrap().push(crate_letter);
+        }
+    }
+
+    fn apply_command_for_one_by_one(&mut self, command: &str) {
         let paramters: Vec<&str> = command.split(" ").collect();
-        self.move_crate(
+        self.move_crates_one_by_one(
             paramters.get(1).unwrap().parse().unwrap(),
             paramters.get(3).unwrap().parse().unwrap(),
             paramters.get(5).unwrap().parse().unwrap(),
         );
     }
+
+    fn apply_command(&mut self, command: &str) {
+        let paramters: Vec<&str> = command.split(" ").collect();
+        self.move_crates(
+            paramters.get(1).unwrap().parse().unwrap(),
+            paramters.get(3).unwrap().parse().unwrap(),
+            paramters.get(5).unwrap().parse().unwrap(),
+        );
+    }
+
     fn print_top(&self) {
         for stack in &self.stacks {
             print!("{}", stack.last().unwrap_or(&' '));
@@ -84,18 +103,21 @@ fn main() {
         initial_state.push(line.unwrap());
         line = input_iterator.next();
     }
-    let mut cargo_space = Cargo::from(initial_state);
-    println!("{cargo_space}");
+    let mut cargo_space = Cargo::from(initial_state.clone());
+    let mut cargo_space2 = Cargo::from(initial_state);
 
     line = input_iterator.next();
     while line != None {
         if line.unwrap().is_empty() {
             break;
         }
-        cargo_space.apply_command(line.unwrap());
+        cargo_space.apply_command_for_one_by_one(line.unwrap());
+        cargo_space2.apply_command(line.unwrap());
         line = input_iterator.next();
     }
     cargo_space.print_top();
+    println!("");
+    cargo_space2.print_top();
 }
 
 #[cfg(test)]
