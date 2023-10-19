@@ -30,6 +30,13 @@ impl Cargo {
         }
         return cargo;
     }
+
+    fn move_crate(&mut self, count: usize, from: usize, to: usize) {
+        for _i in 0..count {
+            let crate_letter: char = self.stacks.get_mut(from - 1).unwrap().pop().unwrap();
+            self.stacks.get_mut(to - 1).unwrap().push(crate_letter);
+        }
+    }
 }
 
 fn main() {
@@ -70,6 +77,28 @@ mod day5_test {
             ]
         };
         assert_eq!(result, expected)
+    }
+
+    #[test]
+    fn should_move_crates() {
+        let mut cargo_space = crate::Cargo {
+            stacks: vec![
+                vec!['Z', 'N'],
+                vec!['M', 'C', 'D'],
+                vec!['P'],
+            ]
+        };
+        cargo_space.move_crate(2, 1, 3);
+
+        let expected = crate::Cargo {
+            stacks: vec![
+                vec![],
+                vec!['M', 'C', 'D'],
+                vec!['P', 'N', 'Z'],
+            ]
+        };
+        assert_eq!(cargo_space, expected);
+
     }
 
 }
