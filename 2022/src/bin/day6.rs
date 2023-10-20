@@ -23,6 +23,8 @@ fn main() {
         }
         let result = get_packet_marker_start(line.as_str(), 4);
         println!("Marker found at: {}", result);
+        let message_marker = get_packet_marker_start(line.as_str(), 14);
+        println!("Message marker found at: {}", message_marker);
     }
 }
 
@@ -38,5 +40,17 @@ mod day6_test {
     fn should_find_marker_at_11() {
         let result = crate::get_packet_marker_start("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", 4);
         assert_eq!(11, result);
+    }
+
+    #[test]
+    fn should_find_message_marker_at_19() {
+        let result = crate::get_packet_marker_start("mjqjpqmgbljsphdztnvjfqwrcgsmlb", 14);
+        assert_eq!(19, result);
+    }
+
+    #[test]
+    fn should_find_message_marker_at_29() {
+        let result = crate::get_packet_marker_start("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", 14);
+        assert_eq!(29, result);
     }
 }
