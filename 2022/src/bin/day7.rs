@@ -19,13 +19,50 @@ impl Directory<'_> {
 }
 
 fn main() {
-    let input_vector = input_reader::get_input(2022, 7, "\n");
-    for line in input_vector {
+    let input = input_reader::get_input(2022, 7, "\n");
+    let mut path:Vec<&Directory> = Vec::new();
+    let root = Directory {
+        name: "/",
+        files: Vec::new(),
+        sub_directories: Vec::new(),
+    };
+    path.push(&root);
+    let mut current_dir = &root;
+    for line in input {
         if line.is_empty() {
             continue;
         }
-        println!("{}", line);
+        let values: Vec<&str> = line.split_ascii_whitespace().collect();
+        if is_command(values) {
+            let command = *values.get(1).unwrap();
+            match command {
+                "cd" => {
+                    if current_dir.name != *values.get(3).unwrap() {
+                        for dir in current_dir.sub_directories {
+                            if dir.name == *values.get(3).unwrap() {
+                                let new_dir = Directory {
+                                    name: *values.get(3).unwrap(),
+                                    files: Vec::new(),
+                                    sub_directories: Vec::new()
+                                };
+                                path.push(&current_dir);
+                                current_dir = new_dir;
+                            }
+                        }
+                    }
+                },
+                _ => panic!("Unsupported command: {}", command),
+
+            }
+        }
     }
+}
+
+fn is_command(values: Vec<&str>) -> bool {
+    if *values.get(0).unwrap() == "$" {
+        return true;
+    }
+    return false;
 }
 
 #[cfg(test)]
