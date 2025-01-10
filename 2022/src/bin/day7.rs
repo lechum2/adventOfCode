@@ -20,33 +20,34 @@ impl Directory<'_> {
 
 fn main() {
     let input = input_reader::get_input(2022, 7, "\n");
-    let mut path:Vec<&Directory> = Vec::new();
+    let mut path:Vec<Directory> = Vec::new();
     let root = Directory {
         name: "/",
         files: Vec::new(),
         sub_directories: Vec::new(),
     };
-    path.push(&root);
-    let mut current_dir = &root;
+    path.push(root);
+    let mut current_dir = path.last_mut().unwrap();
     for line in input {
         if line.is_empty() {
             continue;
         }
         let values: Vec<&str> = line.split_ascii_whitespace().collect();
-        if is_command(values) {
+        if is_command(&values) {
             let command = *values.get(1).unwrap();
             match command {
                 "cd" => {
-                    if current_dir.name != *values.get(3).unwrap() {
+                    let dir_name = *values.get(2).unwrap();
+                    if current_dir.name != dir_name {
                         for dir in current_dir.sub_directories {
-                            if dir.name == *values.get(3).unwrap() {
+                            if dir.name == dir_name {
                                 let new_dir = Directory {
-                                    name: *values.get(3).unwrap(),
+                                    name: dir_name.clone(),
                                     files: Vec::new(),
                                     sub_directories: Vec::new()
                                 };
-                                path.push(&current_dir);
-                                current_dir = new_dir;
+                                path.push(new_dir);
+                                current_dir = path.last_mut().unwrap();
                             }
                         }
                     }
@@ -58,7 +59,7 @@ fn main() {
     }
 }
 
-fn is_command(values: Vec<&str>) -> bool {
+fn is_command(values: &Vec<&str>) -> bool {
     if *values.get(0).unwrap() == "$" {
         return true;
     }
