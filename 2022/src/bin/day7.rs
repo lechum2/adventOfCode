@@ -1,15 +1,15 @@
-struct Directory<'a> {
-    sub_directories: Vec<&'a Directory<'a>>,
-    files: Vec<&'a File<'a>>,
+struct Directory {
+    sub_directories: Vec<Directory>,
+    files: Vec<File>,
     name: String,
 }
 
-struct File<'a> {
-    name: &'a str,
+struct File {
+    name: String,
     size: u32,
 }
 
-impl Directory<'_> {
+impl Directory {
     fn size(&self) -> u32 {
         let mut size: u32 = 0;
         size += self.sub_directories.iter().fold(0, |sum, dir| sum + dir.size());
@@ -20,15 +20,16 @@ impl Directory<'_> {
 
 fn main() {
     let input = input_reader::get_input(2022, 7, "\n");
-    let mut path:Vec<Directory> = Vec::new();
+    let mut path:Vec<&Directory> = Vec::new();
     let root = Directory {
         name: String::from("/"),
         files: Vec::new(),
         sub_directories: Vec::new(),
     };
-    path.push(root);
-    let mut current_dir = path.last_mut().unwrap();
+    path.push(&root);
+    let mut current_dir = &mut root;
     for line in input {
+        println!("Read line: {}", line);
         if line.is_empty() {
             continue;
         }
@@ -39,21 +40,36 @@ fn main() {
                 "cd" => {
                     let dir_name = *values.get(2).unwrap();
                     if current_dir.name != dir_name {
-                        for dir in current_dir.sub_directories.clone() {
+                        for dir in current_dir.sub_directories.iter() {
                             if dir.name == dir_name {
-                                let new_dir = Directory {
-                                    name: dir_name.to_string(),
-                                    files: Vec::new(),
-                                    sub_directories: Vec::new()
-                                };
-                                path.push(new_dir);
-                                current_dir = path.last_mut().unwrap();
+                                path.push(dir);
+                                current_dir = dir;
                             }
                         }
                     }
                 },
+                "ls" => {
+                    continue;
+                },
                 _ => panic!("Unsupported command: {}", command),
 
+            }
+        } else {
+            if *values.get(0).unwrap() == "dir" {
+                current_dir.sub_directories.push(
+                    Directory {
+                        name: values.get(1).unwrap().clone().to_string(),
+                        sub_directories: Vec::new(),
+                        files: Vec::new()
+                    }
+                )
+            } else {
+                current_dir.files.push(
+                    File {
+                        name: values.get(1).unwrap().clone().to_string(),
+                        size: values.get(0).unwrap().parse::<u32>().unwrap()
+                    }
+                )
             }
         }
     }
