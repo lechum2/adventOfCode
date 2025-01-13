@@ -39,10 +39,10 @@ fn main() {
                 "cd" => {
                     let dir_name = *values.get(2).unwrap();
                     if current_dir.name != dir_name {
-                        for dir in current_dir.sub_directories {
+                        for dir in current_dir.sub_directories.clone() {
                             if dir.name == dir_name {
                                 let new_dir = Directory {
-                                    name: dir_name.clone().to_string(),
+                                    name: dir_name.to_string(),
                                     files: Vec::new(),
                                     sub_directories: Vec::new()
                                 };
@@ -74,7 +74,7 @@ mod day7_test {
     #[test]
     fn should_sum_one_file_in_directory() {
         let mut dir1 = Directory {
-            name: "dir1",
+            name: String::from("dir1"),
             files: Vec::new(),
             sub_directories: Vec::new(),
         };
@@ -88,7 +88,7 @@ mod day7_test {
     #[test]
     fn should_sum_directory_in_directory() {
         let mut dir1 = Directory {
-            name: "dir1",
+            name: String::from("dir1"),
             files: Vec::new(),
             sub_directories: Vec::new(),
         };
@@ -98,7 +98,7 @@ mod day7_test {
         };
         dir1.files.push(&file1);
         let mut dir2 = Directory {
-            name: "dir2",
+            name: String::from("dir2"),
             files: Vec::new(),
             sub_directories: Vec::new(),
         };
