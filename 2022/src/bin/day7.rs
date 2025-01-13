@@ -1,7 +1,7 @@
 struct Directory<'a> {
     sub_directories: Vec<&'a Directory<'a>>,
     files: Vec<&'a File<'a>>,
-    name: &'a str,
+    name: String,
 }
 
 struct File<'a> {
@@ -22,7 +22,7 @@ fn main() {
     let input = input_reader::get_input(2022, 7, "\n");
     let mut path:Vec<Directory> = Vec::new();
     let root = Directory {
-        name: "/",
+        name: String::from("/"),
         files: Vec::new(),
         sub_directories: Vec::new(),
     };
@@ -42,7 +42,7 @@ fn main() {
                         for dir in current_dir.sub_directories {
                             if dir.name == dir_name {
                                 let new_dir = Directory {
-                                    name: dir_name.clone(),
+                                    name: dir_name.clone().to_string(),
                                     files: Vec::new(),
                                     sub_directories: Vec::new()
                                 };
